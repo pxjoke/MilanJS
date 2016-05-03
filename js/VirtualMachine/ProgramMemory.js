@@ -2,11 +2,10 @@ function ProgramMemory(maxSize, errorHandler) {
     var self = this;
     var commands = [];
     var MAX_PROGRAM_SIZE = maxSize;
-
+    
     return {
         put: put,
-        get: get,
-        commands: commands
+        get: get
     };
 
     function put(address, opcode, argument) {

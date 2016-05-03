@@ -3,19 +3,26 @@ function VirtualMachine() {
     var MAX_DATA_ADDRESS = 65536;
     var MAX_STACK_SIZE = 8192;
     var self = this;
-    var programMemory = new ProgramMemory(MAX_PROGRAM_SIZE);
-    var dataMemory = new DataMemory(MAX_DATA_ADDRESS);
-    var stackWorkspace = new StackWorkspace(MAX_STACK_SIZE);
+    var io = new IOSupport();
+    var errorHandler = new RuntimeErrorHandler(self);
+    var programMemory = new ProgramMemory(MAX_PROGRAM_SIZE, errorHandler);
+    var dataMemory = new DataMemory(MAX_DATA_ADDRESS, errorHandler);
+    var stackWorkspace = new StackWorkspace(MAX_STACK_SIZE, errorHandler);
     var programPointer = 0;
     var isWorking = false;
-    var errorHandler = new RuntimeErrorHandler(self);
-    return {
-        init: init,
-        run: run,
-        stop: stop,
-        getStackPointer: getStackPointer,
-        getProgramPointer: getProgramPointer
-    };
+
+    
+    this.init = init;
+    this.run = run;
+    this.stop = stop;
+    this.getStackPointer = getStackPointer;
+    this.getProgramPointer = getProgramPointer;
+    this.errorHandler = errorHandler;
+    this.programMemory = programMemory;
+    this.dataMemory = dataMemory;
+    this.stackWorkspace = stackWorkspace;
+
+
 
     function getStackPointer() {
         return stackWorkspace.getStackPointer();
@@ -24,6 +31,7 @@ function VirtualMachine() {
     function getProgramPointer() {
         return programPointer;
     }
+
     function init() {
         // 0:      PUSH     2
         // 1:      STORE   42              ; n := READ
@@ -35,7 +43,9 @@ function VirtualMachine() {
         // 7:      PUSH    10
         // 8:      STORE   42
         // 9:      LOAD    42
+        // 10:      PRINT
         // 10:     STOP
+
         programMemory.put(0, Opcodes.get().PUSH, 2);
         programMemory.put(1, Opcodes.get().STORE, 42);
         programMemory.put(2, Opcodes.get().LOAD, 14);
@@ -46,7 +56,8 @@ function VirtualMachine() {
         programMemory.put(7, Opcodes.get().PUSH, 10);
         programMemory.put(8, Opcodes.get().STORE, 42);
         programMemory.put(9, Opcodes.get().LOAD, 42);
-        programMemory.put(10, Opcodes.get().STOP);
+        programMemory.put(10, Opcodes.get().PRINT);
+        programMemory.put(11, Opcodes.get().STOP);
         console.dir(programMemory.commands);
     }
 
@@ -137,27 +148,27 @@ function VirtualMachine() {
             case Opcodes.get().COMPARE:
                 data = stackWorkspace.pop();
                 switch (command.argument) {
-                    case CompareTypes.get().EQ:
+                    case CompareTypes.get().EQ.code:
                         stackWorkspace.push((stackWorkspace.pop() == data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.get().NE:
+                    case CompareTypes.get().NE.code:
                         stackWorkspace.push((stackWorkspace.pop() != data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.get().LT:
+                    case CompareTypes.get().LT.code:
                         stackWorkspace.push((stackWorkspace.pop() < data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.get().GT:
+                    case CompareTypes.get().GT.code:
                         stackWorkspace.push((stackWorkspace.pop() > data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.get().LE:
+                    case CompareTypes.get().LE.code:
                         stackWorkspace.push((stackWorkspace.pop() <= data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.get().GE:
+                    case CompareTypes.get().GE.code:
                         stackWorkspace.push((stackWorkspace.pop() >= data) ? 1 : 0);
                         break;
 
@@ -179,7 +190,7 @@ function VirtualMachine() {
             case Opcodes.get().JUMP_YES:
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
-                    if (data) {
+                    if (data != 0) {
                         programPointer = command.argument;
                     }
                 }
@@ -191,7 +202,7 @@ function VirtualMachine() {
             case Opcodes.get().JUMP_NO:
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
-                    if (!data) {
+                    if (data == 0) {
                         programPointer = command.argument;
                     }
                 }
@@ -201,11 +212,11 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().INPUT:
-                stackWorkspace.push(vm_read());
+                stackWorkspace.push(io.input());
                 break;
 
             case Opcodes.get().PRINT:
-                vm_write(stackWorkspace.pop());
+                io.printToConsole(stackWorkspace.pop());
                 break;
 
             default:

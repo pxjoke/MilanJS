@@ -1,12 +1,12 @@
 function RuntimeErrorHandler(vm) {
-    var stackPointer = 0;
-    var programPointer = 0;
-    var message;
-    var errorType;
+    var self = this;
     var machine = vm;
-    function error(runtimeError){
-        stackPointer = machine.getStackPointer();
-        programPointer = machine.getProgramPointer();
-        machine.stop();        
+    this.error = error;
+
+    function error(runtimeError) {
+        self.stackPointer = machine.getStackPointer();
+        self.programPointer = machine.getProgramPointer();
+        machine.stop();
+        self.errorType = runtimeError;
     }
 }

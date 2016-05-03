@@ -7,8 +7,9 @@ function StackWorkspace(maxSize, errorHandler) {
     return {
         getStackPointer: getStackPointer,
         pop: pop,
-        push: push
+        push: push,
     };
+
 
     function pop() {
         if (stackPointer > 0) {
