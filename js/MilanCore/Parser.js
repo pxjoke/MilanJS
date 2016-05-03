@@ -13,11 +13,11 @@ function Parser(scanner, out) {
         program();
         mustBe(Tokens.get().EOF);
         // if (!error)
-            out = emitter.flush();
+        out = emitter.flush();
         return out;
     };
 
-    self.getVarTable = function() {
+    self.getVarTable = function () {
         return variables;
     }
 
@@ -42,8 +42,9 @@ function Parser(scanner, out) {
     }
 
     function statement() {
-        if (match(Tokens.get().IDENTIFIER)) {
+        if (see(Tokens.get().IDENTIFIER)) {
             var varAddr = getVarAddr(scanner.value);
+            scanner.nextToken();
             mustBe(Tokens.get().ASSIGN);
             expression();
             emitter.emit(Opcodes.get().STORE, varAddr);
@@ -54,13 +55,15 @@ function Parser(scanner, out) {
         var more = true;
         term();
         while (more) {
-            if (match(Tokens.get().ADDOP)) {
+            if (see(Tokens.get().ADDOP)) {
+                var op = scanner.value;
+                scanner.nextToken();
                 term();
-                if (scanner.value === ArithmeticTypes.get().PLUS)
+                if (op === ArithmeticTypes.get().PLUS)
                     emitter.emit(Opcodes.get().ADD);
-                if (scanner.value === ArithmeticTypes.get().MINUS)
+                else if (op === ArithmeticTypes.get().MINUS)
                     emitter.emit(Opcodes.get().SUB);
-                else reportError('Unexpected ' + scanner.value.name + 'found while \'+\' or \'-\' is expected!')
+                else reportError('Unexpected ' + op.name + ' found while PLUS or MINUS are expected!')
             }
             else
                 more = false;
@@ -71,13 +74,16 @@ function Parser(scanner, out) {
         var more = true;
         factor();
         while (more) {
-            if (match(Tokens.get().MULOP)) {
+            if (see(Tokens.get().MULOP)) {
+                var op = scanner.value;
+                scanner.nextToken();
                 factor();
-                if (scanner.value === ArithmeticTypes.get().MULTIPLY)
+                if (op === ArithmeticTypes.get().MULTIPLY)
                     emitter.emit(Opcodes.get().MULT);
-                if (scanner.value === ArithmeticTypes.get().DIVIDE)
+                else if (op === ArithmeticTypes.get().DIVIDE)
                     emitter.emit(Opcodes.get().DIV);
-                else reportError('Unexpected ' + scanner.value.name + 'found while \'*\' or \'/\' is expected!')
+                else
+                    reportError('Unexpected ' + op.name + ' found while MULTIPLY or DIVIDE are expected!')
             }
             else
                 more = false;
@@ -85,32 +91,36 @@ function Parser(scanner, out) {
     }
 
     function factor() {
-        if(match(Tokens.get().IDENTIFIER)) {
+        if (see(Tokens.get().IDENTIFIER)) {
             emitter.emit(Opcodes.get().LOAD, getVarAddr(scanner.value));
+            scanner.nextToken();
         }
-        else if(match(Tokens.get().NUMBER)) {
-            emitter.emit(Opcodes.get().PUSH, scanner.value());
+        else if (see(Tokens.get().NUMBER)) {
+            emitter.emit(Opcodes.get().PUSH, scanner.value);
+            scanner.nextToken();
         }
-        else if(match(Tokens.get().READ)) {
+        else if (see(Tokens.get().READ)) {
             emitter.emit(Opcodes.get().INPUT);
+            scanner.nextToken();
         }
-        else if(match(Tokens.get().LPAREN)) {
+        else if (match(Tokens.get().LPAREN)) {
             expression();
             mustBe(Tokens.get().RPAREN);
         }
-        else if(match(Tokens.get().ADDOP) && scanner.value == ArithmeticTypes.get().MINUS) {
+        else if (see(Tokens.get().ADDOP) && scanner.value == ArithmeticTypes.get().MINUS) {
+            scanner.nextToken();
             factor();
             emitter.emit(Opcodes.get().INVERT);
         }
         else {
             this.error = true;
-            reportError("Expected identifier, number, READ, '(' or unary minus, but "+scanner.value+" found.");
+            reportError("Expected identifier, number, READ, '(' or unary minus, but " + scanner.value + " found.");
         }
     }
 
 
     function getVarAddr(name) {
-        if (variables[name])
+        if (variables[name] != undefined)
             return variables[name];
         console.log(name);
         variables[name] = nextVarAddr;

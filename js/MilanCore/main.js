@@ -41,8 +41,8 @@ scanner = new Scanner("/* Greatest common divisor */" +
     "BEGIN\n " +
     "a := READ;" +
     "b := READ;" +
-    "b := b - a " +
-    "a := a - b " +
+    "b := b - 3*(6-a)/2; " +
+    "a := a - b; " +
     "END " +
     "$");
 
