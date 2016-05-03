@@ -7,6 +7,8 @@ function VMScanner(source) {
     self.token = {};
     self.value = {};
 
+    self.nextToken = nextToken;
+
     function nextToken() {
         skipSpaces();
 
@@ -26,7 +28,7 @@ function VMScanner(source) {
                 nextChar();
             }
 
-            var value = buffer.toLowerCase();
+            var value = buffer.toUpperCase();
             if (Opcodes.get()[value]) {
                 self.token = VMTokens.get().OPCODE;
                 self.value = Opcodes.get()[value];
@@ -39,6 +41,7 @@ function VMScanner(source) {
         else if (isColon(ch)) {
             self.token = VMTokens.get().COLON;
             self.value = ch;
+            nextChar();
         }
         else {
             self.token = VMTokens.get().ILLEGAL;
@@ -48,7 +51,7 @@ function VMScanner(source) {
 
     function nextChar() {
         cursor++;
-        ch = program[i];
+        ch = sourceCode[cursor];
     }
 
     function skipSpaces() {
@@ -71,5 +74,9 @@ function VMScanner(source) {
 
     function isColon(c) {
         return c === ":";
+    }
+
+    function isEOL(c) {
+        return c === "\n";
     }
 }
