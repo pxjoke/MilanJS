@@ -113,7 +113,7 @@ function Parser(scanner, out) {
             emitter.emit(Opcodes.get().INVERT);
         }
         else {
-            this.error = true;
+            error = true;
             reportError("Expected identifier, number, READ, '(' or unary minus, but " + scanner.value + " found.");
         }
     }
@@ -122,7 +122,6 @@ function Parser(scanner, out) {
     function getVarAddr(name) {
         if (variables[name] != undefined)
             return variables[name];
-        console.log(name);
         variables[name] = nextVarAddr;
         return nextVarAddr++;
     }

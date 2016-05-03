@@ -31,21 +31,24 @@ var ce = new CodeEmitter('hello\n');
 //     "END " +
 //     "$");
 
-// while (scanner.token !== Tokens.get().EOF) {
-//     scanner.nextToken();
-//     console.log(scanner.token);
-//     console.log(scanner.value);
-// }
+
 
 scanner = new Scanner("/* Greatest common divisor */" +
     "BEGIN\n " +
     "a := READ;" +
     "b := READ;" +
-    "b := b - 3*(6-a)/2; " +
+    "b := b - 3*(6-a)/241; " +
     "a := a - b; " +
+    "a := -----4; " +
     "END " +
     "$");
 
+// while (scanner.token !== Tokens.get().EOF) {
+//     scanner.nextToken();
+//     console.log(scanner.token);
+//     console.log(scanner.value);
+// }
+//
 var parser = new Parser(scanner, '');
 console.log(parser.parse());
 console.dir(parser.getVarTable());

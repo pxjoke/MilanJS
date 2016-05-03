@@ -34,7 +34,7 @@ function Scanner(program) {
             else {
                 self.token = Tokens.get().MULOP;
                 self.value = ArithmeticTypes.get().DIVIDE;
-                nextChar();
+                return;
             }
         }
 
