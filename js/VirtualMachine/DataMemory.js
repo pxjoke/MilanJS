@@ -1,4 +1,4 @@
-function DataMemory(maxAddress, errorHandler) {
+function DataMemory(maxAddress) {
     var self = this;
     var words = [];
     var MAX_ADDRESS = MAX_ADDRESS;

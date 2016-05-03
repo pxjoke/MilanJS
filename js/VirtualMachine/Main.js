@@ -1,2 +1,3 @@
-var operations = new Operations();
-console.dir(operations.STOP.name);
+var vm = new VirtualMachine();
+vm.init();
+console.dir(vm)

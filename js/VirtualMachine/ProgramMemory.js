@@ -4,7 +4,8 @@ function ProgramMemory(maxSize) {
     var MAX_PROGRAM_SIZE = maxSize;
 
     return {
-        put: put
+        put: put,
+        commands: commands
     };
 
     function put(address, operation, argument) {
