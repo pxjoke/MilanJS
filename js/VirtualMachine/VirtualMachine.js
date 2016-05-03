@@ -11,9 +11,19 @@ function VirtualMachine() {
     var errorHandler = new RuntimeErrorHandler(self);
     return {
         init: init,
-        run: run
+        run: run,
+        stop: stop,
+        getStackPointer: getStackPointer,
+        getProgramPointer: getProgramPointer
     };
 
+    function getStackPointer() {
+        return stackWorkspace.getStackPointer();
+    }
+
+    function getProgramPointer() {
+        return programPointer;
+    }
     function init() {
         // 0:      PUSH     2
         // 1:      STORE   42              ; n := READ

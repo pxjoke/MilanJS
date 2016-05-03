@@ -1,4 +1,4 @@
-function StackWorkspace(maxSize) {
+function StackWorkspace(maxSize, errorHandler) {
     var self = this;
     var MAX_STACK_SIZE = maxSize;
     var stackPointer = 0;
@@ -15,7 +15,7 @@ function StackWorkspace(maxSize) {
             return stack[--stackPointer];
         }
         else {
-            //TODO: errorHandler STACK_EMPTY
+            errorHandler.error(RuntimeErrors.get().STACK_EMPTY);
             return 0;
         }
     }
@@ -25,7 +25,7 @@ function StackWorkspace(maxSize) {
             stack[stackPointer++] = word;
         }
         else {
-            //TODO: errorHandler STACK_OVERFLOW
+            errorHandler.error(RuntimeErrors.get().STACK_OVERFLOW);
         }
     }
 

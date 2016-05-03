@@ -1,4 +1,4 @@
-function ProgramMemory(maxSize) {
+function ProgramMemory(maxSize, errorHandler) {
     var self = this;
     var commands = [];
     var MAX_PROGRAM_SIZE = maxSize;
@@ -14,7 +14,7 @@ function ProgramMemory(maxSize) {
             commands[address] = new Command(address, opcode, argument);
         }
         else {
-            //TODO: errorHandler
+            errorHandler.error(RuntimeErrors.get().BAD_COMMAND_ADDRESS);
         }
     }
 
