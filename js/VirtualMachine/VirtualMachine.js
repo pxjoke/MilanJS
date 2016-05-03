@@ -7,6 +7,7 @@ function VirtualMachine() {
     var dataMemory = new DataMemory(MAX_DATA_ADDRESS);
     var stackWorkspace = new StackWorkspace(MAX_STACK_SIZE);
     var programPointer = 0;
+    var isWorking = false;
 
     return {
         init: init,
@@ -40,12 +41,16 @@ function VirtualMachine() {
     }
 
     function run() {
-        while (programPointer < MAX_PROGRAM_SIZE) {
-            if (executeCommand() == 0)
-                break;
+        isWorking = true;
+        while (isWorking && programPointer < MAX_PROGRAM_SIZE) {
+            executeCommand();
         }
         console.dir(stackWorkspace);
         console.dir(dataMemory);
+    }
+    
+    function stop() {
+        isWorking = false;
     }
 
     function executeCommand() {
@@ -56,7 +61,7 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().STOP:
-                return 0;
+                stop();
                 break;
 
             case Opcodes.get().LOAD:
@@ -153,8 +158,7 @@ function VirtualMachine() {
 
             case Opcodes.get().JUMP:
                 if (command.argument < MAX_PROGRAM_SIZE) {
-                    programPointer = command.argument;
-                    return 1;
+                    programPointer = command.argument;                    
                 }
                 else {
                     vm_error(BAD_CODE_ADDRESS);
@@ -166,8 +170,7 @@ function VirtualMachine() {
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (data) {
-                        programPointer = command.argument;
-                        return 1;
+                        programPointer = command.argument;                        
                     }
                 }
                 else {
@@ -179,8 +182,7 @@ function VirtualMachine() {
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (!data) {
-                        programPointer = command.argument;
-                        return 1;
+                        programPointer = command.argument;                        
                     }
                 }
                 else {
