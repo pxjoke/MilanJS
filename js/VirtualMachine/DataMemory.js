@@ -9,8 +9,8 @@ function DataMemory(maxAddress, errorHandler) {
     };
 
     function load(address) {
-        if (address < MAX_ADDRESS) {
-            return words[address];
+        if (parseInt(address) < MAX_ADDRESS) {
+            return parseInt(words[address]);
         }
         else {
             errorHandler.error(RuntimeErrors.get().BAD_DATA_ADDRESS);
@@ -19,8 +19,8 @@ function DataMemory(maxAddress, errorHandler) {
     }
 
     function store(address, word) {
-        if (address < MAX_ADDRESS) {
-            words[address] = word;
+        if (parseInt(address) < MAX_ADDRESS) {
+            words[address] = parseInt(word);
         }
         else {
             errorHandler.error(RuntimeErrors.get().BAD_DATA_ADDRESS);

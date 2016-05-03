@@ -9,8 +9,8 @@ function ProgramMemory(maxSize, errorHandler) {
     };
 
     function put(address, opcode, argument) {
-        if (address < MAX_PROGRAM_SIZE) {
-            commands[address] = new Command(address, opcode, argument);
+        if (parseInt(address) < MAX_PROGRAM_SIZE) {
+            commands[address] = new Command(parseInt(address), opcode, parseInt(argument));
         }
         else {
             errorHandler.error(RuntimeErrors.get().BAD_COMMAND_ADDRESS);

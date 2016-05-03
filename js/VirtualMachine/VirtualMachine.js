@@ -46,18 +46,25 @@ function VirtualMachine() {
         // 10:      PRINT
         // 10:     STOP
 
-        programMemory.put(0, Opcodes.get().PUSH, 2);
-        programMemory.put(1, Opcodes.get().STORE, 42);
-        programMemory.put(2, Opcodes.get().LOAD, 14);
-        programMemory.put(3, Opcodes.get().PUSH, 4);
-        programMemory.put(4, Opcodes.get().LOAD, 42);
-        programMemory.put(5, Opcodes.get().COMPARE, 2);
-        programMemory.put(6, Opcodes.get().JUMP_NO, 9);
-        programMemory.put(7, Opcodes.get().PUSH, 10);
-        programMemory.put(8, Opcodes.get().STORE, 42);
-        programMemory.put(9, Opcodes.get().LOAD, 42);
-        programMemory.put(10, Opcodes.get().PRINT);
-        programMemory.put(11, Opcodes.get().STOP);
+        programMemory.put(0, Opcodes.get().INPUT);
+        programMemory.put(1, Opcodes.get().INPUT);
+        programMemory.put(2, Opcodes.get().ADD);
+        programMemory.put(3, Opcodes.get().PRINT);
+        programMemory.put(4, Opcodes.get().STOP);
+
+
+        // programMemory.put(0, Opcodes.get().PUSH, 2);
+        // programMemory.put(1, Opcodes.get().STORE, 42);
+        // programMemory.put(2, Opcodes.get().LOAD, 14);
+        // programMemory.put(3, Opcodes.get().PUSH, 4);
+        // programMemory.put(4, Opcodes.get().LOAD, 42);
+        // programMemory.put(5, Opcodes.get().COMPARE, 2);
+        // programMemory.put(6, Opcodes.get().JUMP_NO, 9);
+        // programMemory.put(7, Opcodes.get().PUSH, 10);
+        // programMemory.put(8, Opcodes.get().STORE, 42);
+        // programMemory.put(9, Opcodes.get().LOAD, 42);
+        // programMemory.put(10, Opcodes.get().PRINT);
+        // programMemory.put(11, Opcodes.get().STOP);
         console.dir(programMemory.commands);
     }
 

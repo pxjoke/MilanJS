@@ -10,7 +10,7 @@ function IOSupport() {
     }
 
     function input() {
-        return prompt("Type integer", '');
+        return parseInt(prompt("Type integer", ''));
     }
 
     function printToConsole(data) {

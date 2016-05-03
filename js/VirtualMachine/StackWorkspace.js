@@ -7,13 +7,13 @@ function StackWorkspace(maxSize, errorHandler) {
     return {
         getStackPointer: getStackPointer,
         pop: pop,
-        push: push,
+        push: push
     };
 
 
     function pop() {
         if (stackPointer > 0) {
-            return stack[--stackPointer];
+            return parseInt(stack[--stackPointer]);
         }
         else {
             errorHandler.error(RuntimeErrors.get().STACK_EMPTY);
@@ -23,7 +23,7 @@ function StackWorkspace(maxSize, errorHandler) {
 
     function push(word) {
         if (stackPointer < MAX_STACK_SIZE) {
-            stack[stackPointer++] = word;
+            stack[stackPointer++] = parseInt(word);
         }
         else {
             errorHandler.error(RuntimeErrors.get().STACK_OVERFLOW);
