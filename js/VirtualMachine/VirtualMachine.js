@@ -9,11 +9,12 @@ function VirtualMachine() {
     var programPointer = 0;
 
     return {
-        init: init
+        init: init,
+        run: run
     };
 
     function init() {
-        // 0:      INPUT
+        // 0:      PUSH     2
         // 1:      STORE   42              ; n := READ
         // 2:      LOAD    14
         // 3:      PUSH     4
@@ -23,9 +24,8 @@ function VirtualMachine() {
         // 7:      PUSH    10
         // 8:      STORE   42
         // 9:      LOAD    42
-        // 10:     PRINT
-        // 11:     STOP
-        programMemory.put(0, Opcodes.get().INPUT);
+        // 10:     STOP
+        programMemory.put(0, Opcodes.get().PUSH, 2);
         programMemory.put(1, Opcodes.get().STORE, 42);
         programMemory.put(2, Opcodes.get().LOAD, 14);
         programMemory.put(3, Opcodes.get().PUSH, 4);
@@ -35,81 +35,81 @@ function VirtualMachine() {
         programMemory.put(7, Opcodes.get().PUSH, 10);
         programMemory.put(8, Opcodes.get().STORE, 42);
         programMemory.put(9, Opcodes.get().LOAD, 42);
-        programMemory.put(10, Opcodes.get().PRINT);
-        programMemory.put(11, Opcodes.get().STOP);
+        programMemory.put(10, Opcodes.get().STOP);
         console.dir(programMemory.commands);
     }
 
     function run() {
         while (programPointer < MAX_PROGRAM_SIZE) {
-            if (!executeCommand())
+            if (executeCommand() == 0)
                 break;
         }
+        console.dir(stackWorkspace);
+        console.dir(dataMemory);
     }
 
     function executeCommand() {
         var command = programMemory.get(programPointer);
         var data = 0;
         switch (command.opcode) {
-            case Opcodes.NOP:
-                /* Ничего не делаем */
+            case Opcodes.get().NOP:
                 break;
 
-            case Opcodes.STOP:
+            case Opcodes.get().STOP:
                 return 0;
                 break;
 
-            case Opcodes.LOAD:
+            case Opcodes.get().LOAD:
                 stackWorkspace.push(dataMemory.load(command.argument));
                 break;
 
-            case Opcodes.STORE:
+            case Opcodes.get().STORE:
                 dataMemory.store(command.argument, stackWorkspace.pop());
                 break;
 
-            case Opcodes.BLOAD:
+            case Opcodes.get().BLOAD:
                 stackWorkspace.push(dataMemory.load(command.argument + stackWorkspace.pop()));
                 break;
 
-            case Opcodes.BSTORE:
+            case Opcodes.get().BSTORE:
                 data = stackWorkspace.pop();
                 dataMemory.store(command.argument + data, stackWorkspace.pop());
                 break;
 
-            case Opcodes.PUSH:
+            case Opcodes.get().PUSH:
                 stackWorkspace.push(command.argument);
                 break;
 
-            case Opcodes.POP:
+            case Opcodes.get().POP:
                 stackWorkspace.pop();
                 break;
 
-            case Opcodes.DUP:
+            case Opcodes.get().DUP:
                 data = stackWorkspace.pop();
                 stackWorkspace.push(data);
                 stackWorkspace.push(data);
                 break;
 
-            case Opcodes.INVERT:
+            case Opcodes.get().INVERT:
                 stackWorkspace.push(stackWorkspace.pop());
                 break;
 
-            case Opcodes.ADD:
+            case Opcodes.get().ADD:
                 data = stackWorkspace.pop();
                 stackWorkspace.push(stackWorkspace.pop() + data);
                 break;
 
-            case Opcodes.SUB:
+            case Opcodes.get().SUB:
                 data = stackWorkspace.pop();
                 stackWorkspace.push(stackWorkspace.pop() - data);
                 break;
 
-            case Opcodes.MULT:
+            case Opcodes.get().MULT:
                 data = stackWorkspace.pop();
                 stackWorkspace.push(stackWorkspace.pop() * data);
                 break;
 
-            case Opcodes.DIV:
+            case Opcodes.get().DIV:
                 data = stackWorkspace.pop();
                 if (0 == data) {
                     vm_error(DIVISION_BY_ZERO);
@@ -119,30 +119,30 @@ function VirtualMachine() {
                 }
                 break;
 
-            case Opcodes.COMPARE:
+            case Opcodes.get().COMPARE:
                 data = stackWorkspace.pop();
-                switch (arg) {
-                    case CompareTypes.EQ:
+                switch (command.argument) {
+                    case CompareTypes.get().EQ:
                         stackWorkspace.push((stackWorkspace.pop() == data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.NE:
+                    case CompareTypes.get().NE:
                         stackWorkspace.push((stackWorkspace.pop() != data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.LT:
+                    case CompareTypes.get().LT:
                         stackWorkspace.push((stackWorkspace.pop() < data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.GT:
+                    case CompareTypes.get().GT:
                         stackWorkspace.push((stackWorkspace.pop() > data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.LE:
+                    case CompareTypes.get().LE:
                         stackWorkspace.push((stackWorkspace.pop() <= data) ? 1 : 0);
                         break;
 
-                    case CompareTypes.GE:
+                    case CompareTypes.get().GE:
                         stackWorkspace.push((stackWorkspace.pop() >= data) ? 1 : 0);
                         break;
 
@@ -151,9 +151,9 @@ function VirtualMachine() {
                 }
                 break;
 
-            case Opcodes.JUMP:
-                if (arg < MAX_PROGRAM_SIZE) {
-                    vm_command_pointer = arg;
+            case Opcodes.get().JUMP:
+                if (command.argument < MAX_PROGRAM_SIZE) {
+                    programPointer = command.argument;
                     return 1;
                 }
                 else {
@@ -162,11 +162,11 @@ function VirtualMachine() {
 
                 break;
 
-            case Opcodes.JUMP_YES:
-                if (arg < MAX_PROGRAM_SIZE) {
+            case Opcodes.get().JUMP_YES:
+                if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (data) {
-                        vm_command_pointer = arg;
+                        programPointer = command.argument;
                         return 1;
                     }
                 }
@@ -175,11 +175,11 @@ function VirtualMachine() {
                 }
                 break;
 
-            case Opcodes.JUMP_NO:
-                if (arg < MAX_PROGRAM_SIZE) {
+            case Opcodes.get().JUMP_NO:
+                if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (!data) {
-                        vm_command_pointer = arg;
+                        programPointer = command.argument;
                         return 1;
                     }
                 }
@@ -188,11 +188,11 @@ function VirtualMachine() {
                 }
                 break;
 
-            case Opcodes.INPUT:
+            case Opcodes.get().INPUT:
                 stackWorkspace.push(vm_read());
                 break;
 
-            case Opcodes.PRINT:
+            case Opcodes.get().PRINT:
                 vm_write(stackWorkspace.pop());
                 break;
 
@@ -200,7 +200,11 @@ function VirtualMachine() {
                 vm_error(UNKNOWN_COMMAND);
         }
 
-        ++vm_command_pointer;
+        ++programPointer;
         return 1;
+    }
+
+    function vm_error(a) {
+
     }
 }
