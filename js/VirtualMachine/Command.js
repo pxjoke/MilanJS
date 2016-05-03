@@ -1,6 +1,7 @@
-function Command(operation, argument) {
+function Command(address, opcode, argument) {
     return {
-        operation: operation,
+        address: address,
+        opcode: opcode,
         argument: argument
     }
 }
