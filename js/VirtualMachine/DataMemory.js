@@ -1,8 +1,13 @@
 function DataMemory(maxAddress, errorHandler) {
     var self = this;
     var words = [];
-    self.MAX_ADDRESS = MAX_ADDRESS;
-
+    var MAX_ADDRESS = MAX_ADDRESS;
+    
+    return {
+        load: load,
+        store: store
+    };
+    
     function load(address) {
         if (address < MAX_ADDRESS) {
             return words[address];
@@ -14,7 +19,7 @@ function DataMemory(maxAddress, errorHandler) {
     }
 
     function store(address, word) {
-        if (address < self.MAX_ADDRESS) {
+        if (address < MAX_ADDRESS) {
             words[address] = word;
         }
         else {
