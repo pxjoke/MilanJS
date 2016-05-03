@@ -5,15 +5,20 @@ function ProgramMemory(maxSize) {
 
     return {
         put: put,
+        get: get,
         commands: commands
     };
 
-    function put(address, operation, argument) {
-        if(address < MAX_PROGRAM_SIZE) {
-            commands[address] = new Command(operation, argument);
+    function put(address, opcode, argument) {
+        if (address < MAX_PROGRAM_SIZE) {
+            commands[address] = new Command(address, opcode, argument);
         }
         else {
             //TODO: errorHandler
         }
+    }
+
+    function get(programPointer) {
+        return commands[programPointer];
     }
 }

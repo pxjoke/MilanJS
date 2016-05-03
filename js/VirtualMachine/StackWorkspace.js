@@ -11,7 +11,7 @@ function StackWorkspace(maxSize) {
     };
 
     function pop() {
-        if (vm_stack_pointer > 0) {
+        if (stackPointer > 0) {
             return stack[--stackPointer];
         }
         else {
