@@ -3,10 +3,6 @@ function Scanner(program) {
     var self = this;
     var size = program.length;
     var i = 0;
-    var tokens = new Token();
-    var arithmetic = new Arithmetic();
-    var cmp = new Cmp();
-    var keywords = new Keywords();
     var ch = program[i];
     self.token = {};
     self.arithval = {};
@@ -36,8 +32,8 @@ function Scanner(program) {
                 nextChar();
             }
             else {
-                self.token = tokens.MULOP;
-                self.value = arithmetic.DIVIDE;
+                self.token = Tokens.get().MULOP;
+                self.value = ArithmeticTypes.get().DIVIDE;
                 nextChar();
             }
         }
@@ -49,7 +45,7 @@ function Scanner(program) {
                 value = value * 10 + Number(ch);
                 nextChar();
             }
-            self.token = tokens.NUMBER;
+            self.token = Tokens.get().NUMBER;
             self.value = value;
         }
         else if(isIdentifierStart(ch)) {
@@ -60,11 +56,11 @@ function Scanner(program) {
             }
 
             var identifier = buffer.toLowerCase();
-            if(keywords[identifier]) {
-                self.token = keywords[identifier];
+            if(Tokens.isKeyword(identifier)) {
+                self.token = Tokens.get()[identifier];
             }
             else {
-                self.token = tokens.IDENTIFIER;
+                self.token = Tokens.get().IDENTIFIER;
                 self.value = identifier;
             }
         }
@@ -72,50 +68,50 @@ function Scanner(program) {
             switch (ch) {
                 case '(':
                     nextChar();
-                    self.token = tokens.LPAREN;
+                    self.token = Tokens.get().LPAREN;
                     break;
 
                 case ')':
                     nextChar();
-                    self.token = tokens.RPAREN;
+                    self.token = Tokens.get().RPAREN;
                     break;
 
                 case ';':
                     nextChar();
-                    self.token = tokens.SEMICOLON;
+                    self.token = Tokens.get().SEMICOLON;
                     break;
 
                 case ':':
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.token = tokens.ASSIGN;
+                        self.token = Tokens.get().ASSIGN;
                     } else {
                         reportError("':=' expected, but ':' found");
                         nextChar();
-                        self.token = tokens.ILLEGAL;
+                        self.token = Tokens.get().ILLEGAL;
                     }
                     break;
 
                 case '<':
-                    self.token = tokens.CMP;
+                    self.token = Tokens.get().CMP;
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.value = cmp.LE;
+                        self.value = CompareTypes.get().LE;
                     } else {
-                        self.value = cmp.LT;
+                        self.value = CompareTypes.get().LT;
                     }
                     break;
 
                 case '>':
-                    self.token = tokens.CMP;
+                    self.token = Tokens.get().CMP;
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.value = cmp.GE;
+                        self.value = CompareTypes.get().GE;
                     } else {
-                        self.value = cmp.GT;
+                        self.value = CompareTypes.get().GT;
                     }
                     break;
 
@@ -123,53 +119,53 @@ function Scanner(program) {
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.token = tokens.CMP;
-                        self.value = cmp.NE;
+                        self.token = Tokens.get().CMP;
+                        self.value = CompareTypes.get().NE;
                     } else {
                         reportError("'!=' expected, but '!' found");
                         nextChar();
-                        self.token = tokens.ILLEGAL;
+                        self.token = Tokens.get().ILLEGAL;
                     }
                     break;
 
                 case '=':
                     nextChar();
-                    self.token = tokens.CMP;
-                    self.value = cmp.EQ;
+                    self.token = Tokens.get().CMP;
+                    self.value = CompareTypes.get().EQ;
                     break;
 
                 case '+':
                     nextChar();
-                    self.token = tokens.ADDOP;
-                    self.value = arithmetic.PLUS;
+                    self.token = Tokens.get().ADDOP;
+                    self.value = ArithmeticTypes.get().PLUS;
                     break;
 
                 case '-':
                     nextChar();
-                    self.token = tokens.ADDOP;
-                    self.value = arithmetic.MINUS;
+                    self.token = Tokens.get().ADDOP;
+                    self.value = ArithmeticTypes.get().MINUS;
                     break;
 
                 case '*':
                     nextChar();
-                    self.token = tokens.MULOP;
-                    self.value = arithmetic.MULTIPLY;
+                    self.token = Tokens.get().MULOP;
+                    self.value = ArithmeticTypes.get().MULTIPLY;
                     break;
 
                 case '/':
                     nextChar();
-                    self.token = tokens.MULOP;
-                    self.value = arithmetic.DIVIDE;
+                    self.token = Tokens.get().MULOP;
+                    self.value = ArithmeticTypes.get().DIVIDE;
                     break;
 
                 case '$':
-                    self.token = tokens.EOF;
+                    self.token = Tokens.get().EOF;
                     break;
 
                 default:
                     reportError("'%c': illegal character", ch);
                     nextChar();
-                    self.token = tokens.ILLEGAL;
+                    self.token = Tokens.get().ILLEGAL;
             };
 
         }
