@@ -1,4 +1,4 @@
-function VMParser(scanner, programMemory, errorHandler) {
+function VMParser(scanner, programMemory) {
     var self = this;
     var errorHandler = new VMParserErrorHandler(self);
     var isWorking = false;
@@ -7,6 +7,7 @@ function VMParser(scanner, programMemory, errorHandler) {
     var argument;
 
     self.stop = stop;
+    self.parse = parse;
 
     function stop() {
         isWorking = false;
@@ -14,8 +15,12 @@ function VMParser(scanner, programMemory, errorHandler) {
 
     function parse() {
         isWorking = true;
-        scanner.nextToken();
+
         while (isWorking) {
+            address = null;
+            opcode = null;
+            argument = null;
+            scanner.nextToken();
             if (scanner.token === VMTokens.get().INT) {
                 address = scanner.value;
                 scanner.nextToken();
@@ -33,6 +38,7 @@ function VMParser(scanner, programMemory, errorHandler) {
 
             if (scanner.token === VMTokens.get().OPCODE) {
                 opcode = scanner.value;
+                if (opcode === Opcodes.get().STOP) stop();
             }
             else {
                 errorHandler.error(VMParserErrors.get().OPCODE_EXPECTED, scanner.value);
@@ -49,6 +55,7 @@ function VMParser(scanner, programMemory, errorHandler) {
             }
 
             programMemory.put(address, opcode, argument);
+
 
         }
     }

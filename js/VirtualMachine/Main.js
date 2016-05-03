@@ -3,21 +3,8 @@ var code =
     "1: POP\n" +
     "2: INPUT\n" +
     "3: STOP\n";
-
+var programMemory = new ProgramMemory(6000);
 var scanner = new VMScanner(code);
-
-while (true) {
-    scanner.nextToken();
-
-    if (scanner.token === VMTokens.get().OPCODE) {
-        console.log(scanner.value);
-        if (scanner.value === Opcodes.get().STOP) {
-            break;
-        }
-    }
-    else {
-        console.log(scanner.value);
-        console.log(scanner.token);
-    }
-
-}
+var parser = new VMParser(scanner, programMemory);
+parser.parse();
+programMemory.printToConsole();
