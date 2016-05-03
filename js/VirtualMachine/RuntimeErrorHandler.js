@@ -7,7 +7,6 @@ function RuntimeErrorHandler(vm) {
     function error(runtimeError){
         stackPointer = machine.getStackPointer();
         programPointer = machine.getProgramPointer();
-        machine.stop();
-        
+        machine.stop();        
     }
 }

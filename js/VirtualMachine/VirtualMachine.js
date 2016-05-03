@@ -8,7 +8,7 @@ function VirtualMachine() {
     var stackWorkspace = new StackWorkspace(MAX_STACK_SIZE);
     var programPointer = 0;
     var isWorking = false;
-
+    var errorHandler = new RuntimeErrorHandler(self);
     return {
         init: init,
         run: run
@@ -48,7 +48,7 @@ function VirtualMachine() {
         console.dir(stackWorkspace);
         console.dir(dataMemory);
     }
-    
+
     function stop() {
         isWorking = false;
     }
@@ -117,7 +117,7 @@ function VirtualMachine() {
             case Opcodes.get().DIV:
                 data = stackWorkspace.pop();
                 if (0 == data) {
-                    vm_error(DIVISION_BY_ZERO);
+                    errorHandler.error(RuntimeErrors.get().DIVISION_BY_ZERO);
                 }
                 else {
                     stackWorkspace.push(stackWorkspace.pop() / data);
@@ -152,16 +152,16 @@ function VirtualMachine() {
                         break;
 
                     default:
-                        vm_error(BAD_RELATION);
+                        errorHandler.error(RuntimeErrors.get().BAD_RELATION);
                 }
                 break;
 
             case Opcodes.get().JUMP:
                 if (command.argument < MAX_PROGRAM_SIZE) {
-                    programPointer = command.argument;                    
+                    programPointer = command.argument;
                 }
                 else {
-                    vm_error(BAD_CODE_ADDRESS);
+                    errorHandler.error(RuntimeErrors.get().BAD_CODE_ADDRESS);
                 }
 
                 break;
@@ -170,11 +170,11 @@ function VirtualMachine() {
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (data) {
-                        programPointer = command.argument;                        
+                        programPointer = command.argument;
                     }
                 }
                 else {
-                    vm_error(BAD_CODE_ADDRESS);
+                    errorHandler.error(RuntimeErrors.get().BAD_CODE_ADDRESS);
                 }
                 break;
 
@@ -182,11 +182,11 @@ function VirtualMachine() {
                 if (command.argument < MAX_PROGRAM_SIZE) {
                     data = stackWorkspace.pop();
                     if (!data) {
-                        programPointer = command.argument;                        
+                        programPointer = command.argument;
                     }
                 }
                 else {
-                    vm_error(BAD_CODE_ADDRESS);
+                    errorHandler.error(RuntimeErrors.get().BAD_CODE_ADDRESS);
                 }
                 break;
 
@@ -199,14 +199,9 @@ function VirtualMachine() {
                 break;
 
             default:
-                vm_error(UNKNOWN_COMMAND);
+                errorHandler.error(RuntimeErrors.get().UNKNOWN_COMMAND);
         }
 
         ++programPointer;
-        return 1;
-    }
-
-    function vm_error(a) {
-
     }
 }
