@@ -16,8 +16,14 @@ function VMScanner(source) {
     self.nextToken = nextToken;
 
     function nextToken() {
-        skipSpaces();
 
+        skipSpaces();
+        if (ch === ';') {
+            while (ch !== '\n' && ch !== '$') nextChar();
+        }
+
+
+        skipSpaces();
         if (isDigit(ch)) {
             var value = 0;
             while (isDigit(ch)) {

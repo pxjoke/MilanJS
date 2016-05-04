@@ -3,7 +3,7 @@ function start() {
     var code = document.getElementById('source').value;
     var vm = new VirtualMachine();
     vm.execute(code);
-    // vm.printState();
+    vm.printState();
     
     VMConsole.printToJSConsole();
 }
