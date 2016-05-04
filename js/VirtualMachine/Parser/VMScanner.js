@@ -1,7 +1,6 @@
 function VMScanner(source) {
     var self = this;
     var sourceCode = source;
-    var sourceSize = sourceCode.length;
     var cursor = 0;
     var ch = sourceCode[cursor];
     self.token = {};
@@ -78,7 +77,7 @@ function VMScanner(source) {
     }
 
     function isLetter(c) {
-        return c.match(/[a-zA-Z]/);
+        return c.match(/[a-zA-Z_]/);
     }
 
     function isColon(c) {

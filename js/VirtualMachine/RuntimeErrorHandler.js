@@ -2,11 +2,12 @@ function RuntimeErrorHandler(vm) {
     var self = this;
     var machine = vm;
     this.error = error;
+    self.message = "";
 
     function error(runtimeError) {
-        self.stackPointer = machine.getStackPointer();
-        self.programPointer = machine.getProgramPointer();
         machine.stop();
         self.errorType = runtimeError;
+        self.message = self.message + runtimeError.type + ": " + runtimeError.message;
+        VMConsole.error(self.message);
     }
 }

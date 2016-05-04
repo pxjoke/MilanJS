@@ -1,6 +1,7 @@
 function DataMemory(maxAddress, errorHandler) {
     var self = this;
     var memory = [];
+    self.memory = memory;
     var MAX_ADDRESS = maxAddress;
 
     self.load = load;

@@ -1,6 +1,5 @@
 var VMConsole = (function () {
-    var infoBuffer = "Output: \n";
-
+    var infoBuffer = "";
 
 
     function write(msg) {
@@ -23,11 +22,16 @@ var VMConsole = (function () {
         return infoBuffer;
     }
 
+    function clear() {
+        infoBuffer = "";
+    }
+
     return {
         write: write,
-        error:error,
+        error: error,
         printToJSConsole: printToJSConsole,
         getInt: getInt,
-        getConsole: getConsole
+        getConsole: getConsole,
+        clear: clear
     };
 })();
