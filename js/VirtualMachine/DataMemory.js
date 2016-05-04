@@ -1,16 +1,15 @@
 function DataMemory(maxAddress, errorHandler) {
     var self = this;
-    var words = [];
+    var memory = [];
     var MAX_ADDRESS = maxAddress;
 
-    return {
-        load: load,
-        store: store
-    };
+    self.load = load;
+    self.store = store;
+    self.printMemoryDump = printMemoryDump;
 
     function load(address) {
         if (parseInt(address) < MAX_ADDRESS) {
-            return parseInt(words[address]);
+            return parseInt(memory[address]);
         }
         else {
             errorHandler.error(RuntimeErrors.get().BAD_DATA_ADDRESS);
@@ -20,10 +19,16 @@ function DataMemory(maxAddress, errorHandler) {
 
     function store(address, word) {
         if (parseInt(address) < MAX_ADDRESS) {
-            words[address] = parseInt(word);
+            memory[address] = parseInt(word);
         }
         else {
             errorHandler.error(RuntimeErrors.get().BAD_DATA_ADDRESS);
+        }
+    }
+
+    function printMemoryDump() {
+        for (i in memory) {
+            VMConsole.write(memory[i]);
         }
     }
 }

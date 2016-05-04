@@ -9,6 +9,7 @@ var VMTokens = (function () {
         INT:    new VMToken('INT'),
         COLON:  new VMToken('COLON'),
         OPCODE: new VMToken('OPCODE'),
+        EOF: new VMToken('EOF'),
         ILLEGAL: new VMToken('ILLEGAL')
     };
 

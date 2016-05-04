@@ -6,6 +6,7 @@ function VMScanner(source) {
     var ch = sourceCode[cursor];
     self.token = {};
     self.value = {};
+    
 
     self.nextToken = nextToken;
 
@@ -43,6 +44,10 @@ function VMScanner(source) {
             self.value = ch;
             nextChar();
         }
+        else if (isEOF(ch)) {
+            self.token = VMTokens.get().EOF;
+            self.value = ch;
+        }
         else {
             self.token = VMTokens.get().ILLEGAL;
             self.value = ch;
@@ -51,7 +56,11 @@ function VMScanner(source) {
 
     function nextChar() {
         cursor++;
-        ch = sourceCode[cursor];
+        if (cursor === sourceCode.length)
+            ch = '$';
+        else
+            ch = sourceCode[cursor];
+
     }
 
     function skipSpaces() {
@@ -76,7 +85,8 @@ function VMScanner(source) {
         return c === ":";
     }
 
-    function isEOL(c) {
-        return c === "\n";
+    function isEOF(c) {
+        return c === '$';
     }
+
 }
