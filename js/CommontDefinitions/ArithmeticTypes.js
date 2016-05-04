@@ -1,15 +1,15 @@
 'use strict';
 
 var ArithmeticTypes = (function () {
-    function ArithmeticTypes(name) {
+    function ArithmeticType(name) {
         this.name = name;
     }
 
     var instance = {
-        PLUS: new ArithmeticTypes('PLUS'),
-        MINUS: new ArithmeticTypes('MINUS'),
-        MULTIPLY: new ArithmeticTypes('MULTIPLY'),
-        DIVIDE: new ArithmeticTypes('DIVIDE')
+        PLUS:     new ArithmeticType('PLUS'),
+        MINUS:    new ArithmeticType('MINUS'),
+        MULTIPLY: new ArithmeticType('MULTIPLY'),
+        DIVIDE:   new ArithmeticType('DIVIDE')
     };
 
     function get() {

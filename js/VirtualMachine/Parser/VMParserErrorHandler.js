@@ -1,4 +1,4 @@
-function RuntimeErrorHandler() {
+function VMParserErrorHandler() {
     var self = this;
     self.error = error;
     self.warning = warning;
@@ -17,18 +17,22 @@ function RuntimeErrorHandler() {
         return self.warnings.length !== 0;
     }
 
-    function warning(runtimeError) {
-        self.warnings.push(runtimeError);
+    function warning(vmParserError, instead) {
+        self.warnings.push({parserError: vmParserError, instead: instead});
     }
 
-    function error(runtimeError) {
-        self.errors.push(runtimeError);
+
+    function error(vmParserError, instead) {
+        self.errors.push({parserError: vmParserError, instead: instead});
     }
 
     function printAllErrors() {
         for (var i in self.errors) {
             var e = self.errors[i];
-            var message = "Runtime Error '" + e.type + "': " + e.message;
+            var message = "Parser Error '" + e.parserError.type + "': "
+                + e.parserError.message;
+            if (e.instead)
+                message = message + " but '" + e.instead + "' found instead.";
             VMConsole.error(message);
         }
     }
@@ -36,19 +40,12 @@ function RuntimeErrorHandler() {
     function printAllWarnings() {
         for (var i in self.warnings) {
             var w = self.warnings[i];
-            var message = "Runtime Warning '" + w.type + "': " + w.message;
+            var message = "Parser Warning '" + w.parserError.type + "': "
+                + w.parserError.message;
+            if (w.instead)
+                message = message + " but '" + w.instead + "' found instead.";
             VMConsole.warning(message);
         }
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-

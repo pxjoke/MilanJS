@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>VM Page</title>
+    <script type="text/javascript" src="js/VirtualMachine/Constants.js"></script>
     <script type="text/javascript" src="js/CommontDefinitions/ArithmeticTypes.js"></script>
     <script type="text/javascript" src="js/CommontDefinitions/CompareTypes.js"></script>
     <script type="text/javascript" src="js/CommontDefinitions/Opcodes.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/Parser/VMParserErrors.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/Parser/VMParserErrorHandler.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/Parser/VMTokens.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/Parser/VMScanner.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/Parser/VMParser.js"></script>
     <script type="text/javascript" src="js/VirtualMachine/Command.js"></script>
-    <script type="text/javascript" src="js/VirtualMachine/IOSupport.js"></script>
+    <script type="text/javascript" src="js/VirtualMachine/VMConsole.js"></script>
     <script type="text/javascript" src="js/VirtualMachine/DataMemory.js"></script>
     <script type="text/javascript" src="js/VirtualMachine/RuntimeErrors.js"></script>
     <script type="text/javascript" src="js/VirtualMachine/RuntimeErrorHandler.js"></script>
@@ -18,5 +24,13 @@
 </head>
 <body>
     <h1>VM testing space</h1>
+<textarea id="source" rows="30" cols="35"></textarea>
+<button onclick="start()">Compile</button>
+<p>
+    ;helloWorlds program <br>
+    0: push 14 ; ppsa <br>
+    1: print ;asc<br>
+    2: stop ;as<br>
+</p>
 </body>
 </html>

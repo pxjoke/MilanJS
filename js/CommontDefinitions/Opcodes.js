@@ -32,7 +32,7 @@ var Opcodes = (function () {
 
     function get() {
         return instance;
-    }
+     }
 
     return {
         get: get

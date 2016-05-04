@@ -1,28 +1,31 @@
 function VirtualMachine() {
-    var MAX_PROGRAM_SIZE = 65536;
-    var MAX_DATA_ADDRESS = 65536;
-    var MAX_STACK_SIZE = 8192;
     var self = this;
-    var io = new IOSupport();
-    var errorHandler = new RuntimeErrorHandler(self);
-    var programMemory = new ProgramMemory(MAX_PROGRAM_SIZE, errorHandler);
-    var dataMemory = new DataMemory(MAX_DATA_ADDRESS, errorHandler);
-    var stackWorkspace = new StackWorkspace(MAX_STACK_SIZE, errorHandler);
-    var programPointer = 0;
+
+    var errorHandler = new RuntimeErrorHandler();
+    var programMemory = new ProgramMemory(Constants.get().MAX_PROGRAM_SIZE, errorHandler);
+    var dataMemory = new DataMemory(Constants.get().MAX_DATA_ADDRESS, errorHandler);
+    var stackWorkspace = new StackWorkspace(Constants.get().MAX_STACK_SIZE, errorHandler);
+    var scanner;
+    var parser;
     var isWorking = false;
+    var programPointer = 0;
 
-    
-    this.init = init;
-    this.run = run;
-    this.stop = stop;
-    this.getStackPointer = getStackPointer;
-    this.getProgramPointer = getProgramPointer;
-    this.errorHandler = errorHandler;
-    this.programMemory = programMemory;
-    this.dataMemory = dataMemory;
-    this.stackWorkspace = stackWorkspace;
+    self.execute = execute;
+    self.run = run;
+    self.stop = stop;
+    self.getStackPointer = getStackPointer;
+    self.getProgramPointer = getProgramPointer;
+    self.printProgramCommands = printProgramCommands;
+    self.printMemoryDump = printMemoryDump;
+    self.printStack = printStack;
+    self.printState = printState;
 
-
+    function execute(source) {
+        scanner = new VMScanner(source);
+        parser = new VMParser(scanner, programMemory);
+        parser.parse();
+        if (!parser.isAnyError()) run();
+    }
 
     function getStackPointer() {
         return stackWorkspace.getStackPointer();
@@ -32,49 +35,43 @@ function VirtualMachine() {
         return programPointer;
     }
 
-    function init() {
-        // 0:      PUSH     2
-        // 1:      STORE   42              ; n := READ
-        // 2:      LOAD    14
-        // 3:      PUSH     4
-        // 4:      LOAD    42
-        // 5:      COMPARE  2
-        // 6:      JUMP_NO  9
-        // 7:      PUSH    10
-        // 8:      STORE   42
-        // 9:      LOAD    42
-        // 10:      PRINT
-        // 10:     STOP
+    function printMemoryDump() {
+        VMConsole.write("Memory:");
+        VMConsole.write("");
+        dataMemory.printMemoryDump();
+        VMConsole.write("");
+        VMConsole.write("------------------------------");
+    }
 
-        programMemory.put(0, Opcodes.get().INPUT);
-        programMemory.put(1, Opcodes.get().INPUT);
-        programMemory.put(2, Opcodes.get().ADD);
-        programMemory.put(3, Opcodes.get().PRINT);
-        programMemory.put(4, Opcodes.get().STOP);
+    function printProgramCommands() {
+        VMConsole.write("Program:");
+        VMConsole.write("");
+        programMemory.printCommands();
+        VMConsole.write("");
+        VMConsole.write("------------------------------");
+    }
 
+    function printStack() {
+        VMConsole.write("Stack:");
+        VMConsole.write("");
+        stackWorkspace.printStack();
+        VMConsole.write("");
+        VMConsole.write("------------------------------");
+    }
 
-        // programMemory.put(0, Opcodes.get().PUSH, 2);
-        // programMemory.put(1, Opcodes.get().STORE, 42);
-        // programMemory.put(2, Opcodes.get().LOAD, 14);
-        // programMemory.put(3, Opcodes.get().PUSH, 4);
-        // programMemory.put(4, Opcodes.get().LOAD, 42);
-        // programMemory.put(5, Opcodes.get().COMPARE, 2);
-        // programMemory.put(6, Opcodes.get().JUMP_NO, 9);
-        // programMemory.put(7, Opcodes.get().PUSH, 10);
-        // programMemory.put(8, Opcodes.get().STORE, 42);
-        // programMemory.put(9, Opcodes.get().LOAD, 42);
-        // programMemory.put(10, Opcodes.get().PRINT);
-        // programMemory.put(11, Opcodes.get().STOP);
-        console.dir(programMemory.commands);
+    function printState() {
+        printProgramCommands();
+        printMemoryDump();
+        printStack();
     }
 
     function run() {
         isWorking = true;
-        while (isWorking && programPointer < MAX_PROGRAM_SIZE) {
+        while (isWorking && programPointer < Constants.get().MAX_PROGRAM_SIZE && !errorHandler.isAnyError()) {
             executeCommand();
         }
-        console.dir(stackWorkspace);
-        console.dir(dataMemory);
+        errorHandler.printAllErrors();
+        errorHandler.printAllWarnings();
     }
 
     function stop() {
@@ -83,6 +80,11 @@ function VirtualMachine() {
 
     function executeCommand() {
         var command = programMemory.get(programPointer);
+        if (!command) {
+            stop();
+            errorHandler.error(RuntimeErrors.get().UNKNOWN_COMMAND);
+            return;
+        }
         var data = 0;
         switch (command.opcode) {
             case Opcodes.get().NOP:
@@ -124,43 +126,43 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().INVERT:
-                stackWorkspace.push(stackWorkspace.pop());
+                stackWorkspace.push(-1 * stackWorkspace.pop());
                 break;
 
             case Opcodes.get().ADD:
-                data = stackWorkspace.pop();
-                stackWorkspace.push(stackWorkspace.pop() + data);
+                data = parseInt(stackWorkspace.pop());
+                stackWorkspace.push(parseInt(stackWorkspace.pop()) + data);
                 break;
 
             case Opcodes.get().SUB:
-                data = stackWorkspace.pop();
-                stackWorkspace.push(stackWorkspace.pop() - data);
+                data = parseInt(stackWorkspace.pop());
+                stackWorkspace.push(parseInt(stackWorkspace.pop()) - data);
                 break;
 
             case Opcodes.get().MULT:
-                data = stackWorkspace.pop();
-                stackWorkspace.push(stackWorkspace.pop() * data);
+                data = parseInt(stackWorkspace.pop());
+                stackWorkspace.push(parseInt(stackWorkspace.pop()) * data);
                 break;
 
             case Opcodes.get().DIV:
-                data = stackWorkspace.pop();
+                data = parseInt(stackWorkspace.pop());
                 if (0 == data) {
                     errorHandler.error(RuntimeErrors.get().DIVISION_BY_ZERO);
                 }
                 else {
-                    stackWorkspace.push(stackWorkspace.pop() / data);
+                    stackWorkspace.push(parseInt(stackWorkspace.pop()) / data);
                 }
                 break;
 
             case Opcodes.get().COMPARE:
-                data = stackWorkspace.pop();
-                switch (command.argument) {
+                data = parseInt(stackWorkspace.pop());
+                switch (parseInt(command.argument)) {
                     case CompareTypes.get().EQ.code:
-                        stackWorkspace.push((stackWorkspace.pop() == data) ? 1 : 0);
+                        stackWorkspace.push((stackWorkspace.pop() === data) ? 1 : 0);
                         break;
 
                     case CompareTypes.get().NE.code:
-                        stackWorkspace.push((stackWorkspace.pop() != data) ? 1 : 0);
+                        stackWorkspace.push((stackWorkspace.pop() !== data) ? 1 : 0);
                         break;
 
                     case CompareTypes.get().LT.code:
@@ -185,8 +187,8 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP:
-                if (command.argument < MAX_PROGRAM_SIZE) {
-                    programPointer = command.argument;
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                    programPointer = parseInt(command.argument) - 1;
                 }
                 else {
                     errorHandler.error(RuntimeErrors.get().BAD_CODE_ADDRESS);
@@ -195,10 +197,10 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP_YES:
-                if (command.argument < MAX_PROGRAM_SIZE) {
-                    data = stackWorkspace.pop();
-                    if (data != 0) {
-                        programPointer = command.argument;
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                    data = parseInt(stackWorkspace.pop());
+                    if (data !== 0) {
+                        programPointer = parseInt(command.argument) - 1;
                     }
                 }
                 else {
@@ -207,10 +209,10 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP_NO:
-                if (command.argument < MAX_PROGRAM_SIZE) {
-                    data = stackWorkspace.pop();
-                    if (data == 0) {
-                        programPointer = command.argument;
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                    data = parseInt(stackWorkspace.pop());
+                    if (data === 0) {
+                        programPointer = parseInt(command.argument) - 1;
                     }
                 }
                 else {
@@ -219,11 +221,15 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().INPUT:
-                stackWorkspace.push(io.input());
+                stackWorkspace.push(VMConsole.getInt());
                 break;
 
             case Opcodes.get().PRINT:
-                io.printToConsole(stackWorkspace.pop());
+                VMConsole.write("Output:");
+                VMConsole.write("");
+                VMConsole.write(stackWorkspace.pop());
+                VMConsole.write("");
+                VMConsole.write("------------------------------");
                 break;
 
             default:

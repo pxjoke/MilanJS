@@ -55,13 +55,13 @@ function Scanner(program) {
                 nextChar();
             }
 
-            var identifier = buffer.toLowerCase();
+            var identifier = buffer.toUpperCase();
             if(Tokens.isKeyword(identifier)) {
                 self.token = Tokens.get()[identifier];
             }
             else {
                 self.token = Tokens.get().IDENTIFIER;
-                self.value = identifier;
+                self.value = identifier.toLocaleLowerCase();
             }
         }
         else {
