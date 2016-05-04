@@ -78,6 +78,11 @@ function VirtualMachine() {
 
     function executeCommand() {
         var command = programMemory.get(programPointer);
+        if (!command) {
+            stop();
+            errorHandler.error(RuntimeErrors.get().UNKNOWN_COMMAND);
+            return;
+        }
         var data = 0;
         switch (command.opcode) {
             case Opcodes.get().NOP:
@@ -180,8 +185,8 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP:
-                if ( parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
-                    programPointer =  parseInt(command.argument)-1;
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                    programPointer = parseInt(command.argument) - 1;
                 }
                 else {
                     errorHandler.error(RuntimeErrors.get().BAD_CODE_ADDRESS);
@@ -190,10 +195,10 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP_YES:
-                if ( parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
-                    data =  parseInt(stackWorkspace.pop());
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                    data = parseInt(stackWorkspace.pop());
                     if (data !== 0) {
-                        programPointer =  parseInt(command.argument)-1;
+                        programPointer = parseInt(command.argument) - 1;
                     }
                 }
                 else {
@@ -202,10 +207,10 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().JUMP_NO:
-                if ( parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
+                if (parseInt(command.argument) < Constants.get().MAX_PROGRAM_SIZE) {
                     data = parseInt(stackWorkspace.pop());
                     if (data === 0) {
-                        programPointer =  parseInt(command.argument)-1;
+                        programPointer = parseInt(command.argument) - 1;
                     }
                 }
                 else {

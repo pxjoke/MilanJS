@@ -10,6 +10,10 @@ var VMConsole = (function () {
         infoBuffer = infoBuffer + msg + "\n";
     }
 
+    function warning(msg) {
+        infoBuffer = infoBuffer + msg + "\n";
+    }
+
     function getInt() {
         return parseInt(prompt("Type integer", ''));
     }
@@ -32,6 +36,7 @@ var VMConsole = (function () {
         printToJSConsole: printToJSConsole,
         getInt: getInt,
         getConsole: getConsole,
-        clear: clear
+        clear: clear,
+        warning: warning
     };
 })();

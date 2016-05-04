@@ -2,11 +2,17 @@ function VMScanner(source) {
     var self = this;
     var sourceCode = source;
     var cursor = 0;
-    var ch = sourceCode[cursor];
+    var ch;
     self.token = {};
     self.value = {};
-    
 
+    //Add EOF marker to source
+    if (sourceCode)
+        sourceCode = sourceCode + '$';
+    else
+        sourceCode = '$';
+
+    ch = sourceCode[cursor];
     self.nextToken = nextToken;
 
     function nextToken() {
@@ -55,11 +61,7 @@ function VMScanner(source) {
 
     function nextChar() {
         cursor++;
-        if (cursor === sourceCode.length)
-            ch = '$';
-        else
-            ch = sourceCode[cursor];
-
+        ch = sourceCode[cursor];
     }
 
     function skipSpaces() {

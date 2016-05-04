@@ -15,7 +15,7 @@ var RuntimeErrors = (function () {
         STACK_EMPTY:         new RuntimeError('STACK_EMPTY',         "Error: stack is empty (no arguments are available)"),
         DIVISION_BY_ZERO:    new RuntimeError('DIVISION_BY_ZERO',    "Error: division by zero"),
         BAD_INPUT:           new RuntimeError('BAD_INPUT',           "Error: illegal input"),
-        UNKNOWN_COMMAND:     new RuntimeError('UNKNOWN_COMMAND',     "Error: unknown command, unable to execute"),
+        UNKNOWN_COMMAND:     new RuntimeError('UNKNOWN_COMMAND',     "Error: unknown command, maybe stop is not presented"),
         DEFAULT:             new RuntimeError('DEFAULT',             "Error: runtime error")
     };
 
