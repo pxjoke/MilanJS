@@ -16,3 +16,13 @@ function start() {
 // console.log(e.isAnyWarnings());
 // e.printAllWarnings();
 // VMConsole.printToJSConsole();
+//
+// var e = new RuntimeErrorHandler();
+// e.error(RuntimeErrors.get().BAD_DATA_ADDRESS);
+// e.error(RuntimeErrors.get().BAD_COMMAND_ADDRESS);
+// e.error(RuntimeErrors.get().DEFAULT);
+// e.warning(RuntimeErrors.get().BAD_INPUT);
+// e.warning(RuntimeErrors.get().DIVISION_BY_ZERO);
+// e.printAllErrors();
+// e.printAllWarnings();
+// VMConsole.printToJSConsole();

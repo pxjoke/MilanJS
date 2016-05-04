@@ -1,7 +1,7 @@
 function VirtualMachine() {
     var self = this;
 
-    var errorHandler = new RuntimeErrorHandler(self);
+    var errorHandler = new RuntimeErrorHandler();
     var programMemory = new ProgramMemory(Constants.get().MAX_PROGRAM_SIZE, errorHandler);
     var dataMemory = new DataMemory(Constants.get().MAX_DATA_ADDRESS, errorHandler);
     var stackWorkspace = new StackWorkspace(Constants.get().MAX_STACK_SIZE, errorHandler);
@@ -67,9 +67,11 @@ function VirtualMachine() {
 
     function run() {
         isWorking = true;
-        while (isWorking && programPointer < Constants.get().MAX_PROGRAM_SIZE) {
+        while (isWorking && programPointer < Constants.get().MAX_PROGRAM_SIZE && !errorHandler.isAnyError()) {
             executeCommand();
         }
+        errorHandler.printAllErrors();
+        errorHandler.printAllWarnings();
     }
 
     function stop() {

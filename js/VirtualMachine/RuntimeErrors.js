@@ -7,16 +7,16 @@ var RuntimeErrors = (function () {
     }
 
     var instance = {
-        BAD_DATA_ADDRESS:    new RuntimeError('BAD_DATA_ADDRESS',    "Error: illegal data address"),
-        BAD_COMMAND_ADDRESS: new RuntimeError('BAD_COMMAND_ADDRESS', "Error: illegal program address"),
-        BAD_CODE_ADDRESS:    new RuntimeError('BAD_CODE_ADDRESS',    "Error: illegal address in JUMP* instruction"),
-        BAD_RELATION:        new RuntimeError('BAD_RELATION',        "Error: illegal comparison operator"),
-        STACK_OVERFLOW:      new RuntimeError('STACK_OVERFLOW',      "Error: stack overflow"),
-        STACK_EMPTY:         new RuntimeError('STACK_EMPTY',         "Error: stack is empty (no arguments are available)"),
-        DIVISION_BY_ZERO:    new RuntimeError('DIVISION_BY_ZERO',    "Error: division by zero"),
-        BAD_INPUT:           new RuntimeError('BAD_INPUT',           "Error: illegal input"),
-        UNKNOWN_COMMAND:     new RuntimeError('UNKNOWN_COMMAND',     "Error: unknown command, maybe stop is not presented"),
-        DEFAULT:             new RuntimeError('DEFAULT',             "Error: runtime error")
+        BAD_DATA_ADDRESS:    new RuntimeError('BAD_DATA_ADDRESS',    "Illegal data address"),
+        BAD_COMMAND_ADDRESS: new RuntimeError('BAD_COMMAND_ADDRESS', "Illegal program address"),
+        BAD_CODE_ADDRESS:    new RuntimeError('BAD_CODE_ADDRESS',    "Illegal address in JUMP* instruction"),
+        BAD_RELATION:        new RuntimeError('BAD_RELATION',        "Illegal comparison operator"),
+        STACK_OVERFLOW:      new RuntimeError('STACK_OVERFLOW',      "Stack overflow"),
+        STACK_EMPTY:         new RuntimeError('STACK_EMPTY',         "Stack is empty (no arguments are available)"),
+        DIVISION_BY_ZERO:    new RuntimeError('DIVISION_BY_ZERO',    "Division by zero"),
+        BAD_INPUT:           new RuntimeError('BAD_INPUT',           "Illegal input"),
+        UNKNOWN_COMMAND:     new RuntimeError('UNKNOWN_COMMAND',     "Unknown command, maybe stop is not presented"),
+        DEFAULT:             new RuntimeError('DEFAULT',             "Runtime error")
     };
 
     function get() {
