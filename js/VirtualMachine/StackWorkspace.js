@@ -1,12 +1,10 @@
 function StackWorkspace(maxSize, errorHandler) {
     var self = this;
     var MAX_STACK_SIZE = maxSize;
-    self.stackPointer = 0;
     var stack = [];
     self.stack = stack;
 
 
-    self.getStackPointer = getStackPointer;
     self.pop = pop;
     self.push = push;
     self.printStack = printStack;
@@ -18,8 +16,8 @@ function StackWorkspace(maxSize, errorHandler) {
     }
 
     function pop() {
-        if (self.stackPointer > 0) {
-            return parseInt(stack[--self.stackPointer]);
+        if (stack.length > 0) {
+            return parseInt(stack.pop());
         }
         else {
             errorHandler.error(RuntimeErrors.get().STACK_EMPTY);
@@ -28,16 +26,12 @@ function StackWorkspace(maxSize, errorHandler) {
     }
 
     function push(word) {
-        if (self.stackPointer < MAX_STACK_SIZE) {
-            stack[self.stackPointer++] = parseInt(word);
+        if (stack.length  < MAX_STACK_SIZE) {
+            stack.push(parseInt(word));
         }
         else {
             errorHandler.error(RuntimeErrors.get().STACK_OVERFLOW);
         }
-    }
-
-    function getStackPointer() {
-        return self.stackPointer;
     }
 
 }

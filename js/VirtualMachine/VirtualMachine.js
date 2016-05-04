@@ -13,7 +13,6 @@ function VirtualMachine() {
     self.execute = execute;
     self.run = run;
     self.stop = stop;
-    self.getStackPointer = getStackPointer;
     self.getProgramPointer = getProgramPointer;
     self.printProgramCommands = printProgramCommands;
     self.printMemoryDump = printMemoryDump;
@@ -27,9 +26,6 @@ function VirtualMachine() {
         if (!parser.isAnyError()) run();
     }
 
-    function getStackPointer() {
-        return stackWorkspace.getStackPointer();
-    }
 
     function getProgramPointer() {
         return programPointer;
