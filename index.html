@@ -10,7 +10,12 @@
     <link rel="stylesheet" href="css/sticky-footer-navbar.css">
     <link rel="stylesheet" href="css/main.css">
     <style>
-        #editor {
+        #sourceEditor {
+            position: relative;
+            width: 100%;
+            height:400px;
+        }
+        #machineCodeEditor{
             position: relative;
             width: 100%;
             height:400px;
@@ -68,7 +73,7 @@
                 <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step</button>
             </div>
 
-            <div id="editor">/* Code Sample */
+            <div id="sourceEditor">/* Code Sample */
 begin
     n := READ;
     p := READ;
@@ -86,10 +91,71 @@ end
 
         </div>
         <div class="col-lg-4 machine-code-area">
-            <div class="well">Compiled code</div>
+            <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
+                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Command</button>
+            </div>
+            <div id="machineCodeEditor">; Sample machine code
+0: push 12
+1: pop
+2: input
+3: store 15
+4: load 15
+5: print
+6: stop
+            </div>
         </div>
         <div class="col-lg-3 output-area">
-            <div class="well">Outputs</div>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Output
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        15<br>
+                        10 <br>
+                        3 <br>
+                        15<br>
+                        10 <br>
+                        3 <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Stack
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        15<br>
+                        10 <br>
+                        3
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Memory
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        15<br>
+                        10 <br>
+                        3 <br>
+                        15<br>
+                        10 <br>
+                        3 <br>
+                        15<br>
+                        10 <br>
+                        3 <br>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -107,10 +173,17 @@ end
         crossorigin="anonymous"></script>
 <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    var editor = ace.edit("editor");
-    editor.getSession().setUseWorker(false);
-    editor.setTheme("ace/theme/clouds");
-    editor.getSession().setMode("ace/mode/text");
+    var sourceEditor = ace.edit("sourceEditor");
+    sourceEditor.getSession().setUseWorker(false);
+    sourceEditor.setTheme("ace/theme/clouds");
+    sourceEditor.getSession().setMode("ace/mode/pascal");
+
+    var machineCodeEditor = ace.edit("machineCodeEditor");
+    machineCodeEditor.getSession().setUseWorker(false);
+    machineCodeEditor.setTheme("ace/theme/iplastic");
+    machineCodeEditor.getSession().setMode("ace/mode/text");
+    machineCodeEditor.setReadOnly(true);  // false to make it editable
+    machineCodeEditor.setFontSize(14);
 </script>
 </body>
 </html>
