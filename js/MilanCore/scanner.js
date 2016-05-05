@@ -202,6 +202,6 @@ function Scanner(program) {
 
     function reportError(message, args) {
         self.errorState = true;
-        console.log(message, ' ', args);
+        VMConsole.error(message+ ' '+ args);
     }
 }
