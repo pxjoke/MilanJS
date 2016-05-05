@@ -3,15 +3,15 @@ var VMConsole = (function () {
 
 
     function write(msg) {
-        infoBuffer = infoBuffer + msg + "\n";
+        infoBuffer = infoBuffer + msg + "<br>";
     }
 
     function error(msg) {
-        infoBuffer = infoBuffer + msg + "\n";
+        infoBuffer = infoBuffer + msg + "<br>";
     }
 
     function warning(msg) {
-        infoBuffer = infoBuffer + msg + "\n";
+        infoBuffer = infoBuffer + msg + "<br>";
     }
 
     function getInt() {
@@ -22,7 +22,7 @@ var VMConsole = (function () {
         console.log(infoBuffer);
     }
 
-    function getConsole() {
+    function getBuffer() {
         return infoBuffer;
     }
 
@@ -35,7 +35,7 @@ var VMConsole = (function () {
         error: error,
         printToJSConsole: printToJSConsole,
         getInt: getInt,
-        getConsole: getConsole,
+        getBuffer: getBuffer,
         clear: clear,
         warning: warning
     };

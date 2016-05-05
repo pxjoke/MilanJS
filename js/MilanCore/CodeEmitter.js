@@ -2,18 +2,18 @@
 
 function CodeEmitter(code) {
     var self = this;
-    self.code = code?code:'';
+    self.code = code ? code : '';
     var address = 0;
     var buffer = [];
-    var nopCommand = new Command(Opcodes.get().NOP);
+    var nopCommand = new CoreCommand(Opcodes.get().NOP);
 
-    self.emit = function(opcode, arg) {
+    self.emit = function (opcode, arg) {
         address++;
-        buffer.push(new Command(opcode, arg));
+        buffer.push(new CoreCommand(opcode, arg));
     };
 
-    self.emitAt = function(addr, opcode, arg) {
-        buffer[addr] = new Command(opcode, arg);
+    self.emitAt = function (addr, opcode, arg) {
+        buffer[addr] = new CoreCommand(opcode, arg);
     };
 
     self.makeHole = function () {
@@ -26,7 +26,7 @@ function CodeEmitter(code) {
     };
 
     self.flush = function () {
-        buffer.forEach(function(command, addr) {
+        buffer.forEach(function (command, addr) {
             self.code = self.code.concat(command.getStr(addr));
         });
         return self.code;

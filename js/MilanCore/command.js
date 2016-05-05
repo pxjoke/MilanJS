@@ -1,6 +1,6 @@
 'use strict';
 
-function Command(opcode, arg) {
+function CoreCommand(opcode, arg) {
     this.opcode = opcode;
     this.arg = arg?arg:0;
     var self = this;

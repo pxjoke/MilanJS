@@ -13,12 +13,13 @@
         #sourceEditor {
             position: relative;
             width: 100%;
-            height:400px;
+            height: 400px;
         }
-        #machineCodeEditor{
+
+        #machineCodeEditor {
             position: relative;
             width: 100%;
-            height:400px;
+            height: 400px;
         }
     </style>
 </head>
@@ -66,62 +67,54 @@
         <h1>Milan in action</h1>
     </div>
     <div class="row">
-        <div class="col-lg-5 editor-area">
-            <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
-                <button type="button" class="btn btn-info"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Compile</button>
-                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> Run</button>
-                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step</button>
-            </div>
-
-            <div id="sourceEditor">/* Code Sample */
-begin
-    n := READ;
-    p := READ;
-
-    s := 1;
-
-    while p > 0 do
-    s := s * n;
-    p := p - 1
-    od;
-    if s < 10 then write(0) else write(s) fi;
-    write(s);
-end
-</div>
-
-        </div>
-        <div class="col-lg-4 machine-code-area">
-            <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
-                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Command</button>
-            </div>
-            <div id="machineCodeEditor">; Sample machine code
-0: push 12
-1: pop
-2: input
-3: store 15
-4: load 15
-5: print
-6: stop
-            </div>
-        </div>
-        <div class="col-lg-3 output-area">
+        <div class="col-lg-9">
             <div class="row">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            Output
-                        </h3>
+                <div class="col-lg-6  editor-area">
+                    <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
+                        <button type="button" class="btn btn-info" id="sourceCompileBtn"><span
+                                class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Compile
+                        </button>
+                        <button type="button" class="btn btn-success" id="sourceRunBtn"><span
+                                class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> Run
+                        </button>
+                        <button type="button" class="btn btn-default" id="sourceStepByStepBtn"><span
+                                class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step
+                        </button>
                     </div>
-                    <div class="panel-body">
-                        15<br>
-                        10 <br>
-                        3 <br>
-                        15<br>
-                        10 <br>
-                        3 <br>
+                    <div id="sourceEditor"></div>
+                </div>
+
+                <div class="col-lg-6  machine-code-area">
+                    <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
+                        <button type="button" class="btn btn-default" id="nextCommandBtn"><span
+                                class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Command
+                        </button>
                     </div>
+                    <div id="machineCodeEditor"></div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="output-area">
+                    <div class="panel panel-default ">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Output
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <p id="output"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-3 ">
+
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -130,9 +123,7 @@ end
                         </h3>
                     </div>
                     <div class="panel-body">
-                        15<br>
-                        10 <br>
-                        3
+
                     </div>
                 </div>
             </div>
@@ -144,15 +135,7 @@ end
                         </h3>
                     </div>
                     <div class="panel-body">
-                        15<br>
-                        10 <br>
-                        3 <br>
-                        15<br>
-                        10 <br>
-                        3 <br>
-                        15<br>
-                        10 <br>
-                        3 <br>
+
                     </div>
                 </div>
             </div>
@@ -185,5 +168,29 @@ end
     machineCodeEditor.setReadOnly(true);  // false to make it editable
     machineCodeEditor.setFontSize(14);
 </script>
+<script type="application/javascript" src="js/MilanCore/enums/Tokens.js"></script>
+<script type="application/javascript" src="js/CommontDefinitions/CompareTypes.js"></script>
+<script type="application/javascript" src="js/CommontDefinitions/ArithmeticTypes.js"></script>
+<script type="application/javascript" src="js/CommontDefinitions/Opcodes.js"></script>
+<script type="application/javascript" src="js/MilanCore/Unit.js"></script>
+<script type="application/javascript" src="js/MilanCore/scanner.js"></script>
+<script type="application/javascript" src="js/MilanCore/command.js"></script>
+<script type="application/javascript" src="js/MilanCore/CodeEmitter.js"></script>
+<script type="application/javascript" src="js/MilanCore/Parser.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Constants.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Parser/VMParserErrors.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Parser/VMParserErrorHandler.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Parser/VMTokens.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Parser/VMScanner.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Parser/VMParser.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/Command.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/VMConsole.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/DataMemory.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/RuntimeErrors.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/RuntimeErrorHandler.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/ProgramMemory.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/StackWorkspace.js"></script>
+<script type="text/javascript" src="js/VirtualMachine/VirtualMachine.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

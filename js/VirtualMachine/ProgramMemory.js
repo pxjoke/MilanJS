@@ -6,6 +6,7 @@ function ProgramMemory(maxSize, errorHandler) {
     self.put = put;
     self.get = get;
     self.printCommands = printCommands;
+    self.getDump = getDump;
 
     function put(address, opcode, argument) {
         if (parseInt(address) < MAX_PROGRAM_SIZE) {
@@ -25,4 +26,13 @@ function ProgramMemory(maxSize, errorHandler) {
             VMConsole.write(commands[i].address + ": " + commands[i].opcode.name + " " + commands[i].argument);
         }
     }
+
+    function getDump() {
+        var buffer = "";
+        for (var i in commands) {
+            buffer += (commands[i].address + ": " + commands[i].opcode.name + " " + commands[i].argument + "\n");
+        }
+        return buffer;
+    }
+
 }

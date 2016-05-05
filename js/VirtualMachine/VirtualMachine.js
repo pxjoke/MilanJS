@@ -10,20 +10,26 @@ function VirtualMachine() {
     var isWorking = false;
     var programPointer = 0;
 
+    self.compile = compile;
     self.execute = execute;
-    self.run = run;
     self.stop = stop;
     self.getProgramPointer = getProgramPointer;
     self.printProgramCommands = printProgramCommands;
     self.printMemoryDump = printMemoryDump;
     self.printStack = printStack;
     self.printState = printState;
-
-    function execute(source) {
+    self.getCommandsDump = getCommandsDump;
+    self.executeCommand = executeCommand;
+    
+    
+    function getCommandsDump() {
+        return programMemory.getDump();
+    }
+    
+    function compile(source) {
         scanner = new VMScanner(source);
         parser = new VMParser(scanner, programMemory);
         parser.parse();
-        if (!parser.isAnyError()) run();
     }
 
 
@@ -36,7 +42,8 @@ function VirtualMachine() {
         VMConsole.write("");
         dataMemory.printMemoryDump();
         VMConsole.write("");
-        VMConsole.write("------------------------------");
+        VMConsole.write("------------------------------");        
+        
     }
 
     function printProgramCommands() {
@@ -61,8 +68,9 @@ function VirtualMachine() {
         printStack();
     }
 
-    function run() {
-        isWorking = true;
+    function execute() {
+        if (!parser.isAnyError())
+            isWorking = true;
         while (isWorking && programPointer < Constants.get().MAX_PROGRAM_SIZE && !errorHandler.isAnyError()) {
             executeCommand();
         }
@@ -221,11 +229,7 @@ function VirtualMachine() {
                 break;
 
             case Opcodes.get().PRINT:
-                VMConsole.write("Output:");
-                VMConsole.write("");
                 VMConsole.write(stackWorkspace.pop());
-                VMConsole.write("");
-                VMConsole.write("------------------------------");
                 break;
 
             default:
