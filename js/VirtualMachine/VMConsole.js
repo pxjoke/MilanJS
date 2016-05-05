@@ -3,7 +3,7 @@ var VMConsole = (function () {
 
 
     function write(msg) {
-        infoBuffer = infoBuffer +'<li class="list-group-item">' + msg + '</li>';
+        infoBuffer = infoBuffer +'<li class="list-group-item list-group-item-success">' + msg + '</li>';
     }
 
     function error(msg) {
@@ -11,7 +11,7 @@ var VMConsole = (function () {
     }
 
     function warning(msg) {
-        infoBuffer = infoBuffer + '<li class="list-group-item">' + msg + '</li>';
+        infoBuffer = infoBuffer + '<li class="list-group-item list-group-item-warning">' + msg + '</li>';
     }
 
     function getInt() {

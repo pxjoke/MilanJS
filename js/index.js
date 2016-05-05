@@ -17,10 +17,18 @@ $("#sourceCompileBtn").on('click', compile);
 $("#sourceRunBtn").on('click', run);
 $("#sourceStepByStepBtn").on('click', stepByStep);
 $("#nextCommandBtn").on('click', step);
+$("#continueBtn").on('click', continueExecution);
+$("#clearOutputBtn").on('click', clearOutput);
 $('#file').change(fileUpload);
 $('#file').bootstrapFileInput();
 $('#nextCommandBtn').addClass('disabled');
+$('#continueBtn').addClass('disabled');
 
+
+function clearOutput() {
+    VMConsole.clear();
+    printVMConsoleToOutput();
+}
 
 function printVMConsoleToOutput() {
     $("#output").html(VMConsole.getBuffer());
@@ -51,14 +59,31 @@ function stepByStep() {
     compile();
     machineCodeEditor.gotoLine(1);
     $('#nextCommandBtn').removeClass('disabled');
+    $('#continueBtn').removeClass('disabled');
 
 }
 
 function step() {
-    
+    if (!vm.isWorking()) {
+        $('#nextCommandBtn').addClass('disabled');
+        $('#continueBtn').addClass('disabled');
+        return;
+    }
     vm.executeCommand();
     machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
     print();
+}
+
+function continueExecution() {
+    if (!vm.isWorking()) {
+        $('#nextCommandBtn').addClass('disabled');
+        $('#continueBtn').addClass('disabled');
+        return;
+    }
+    vm.execute();
+    print();
+    $('#nextCommandBtn').addClass('disabled');
+    $('#continueBtn').addClass('disabled');
 }
 
 function compile() {
@@ -83,8 +108,8 @@ function fileUpload(evt) {
     var f = files;
     console.dir(f);
     var reader = new FileReader();
-    reader.onload = (function(theFile) {
-        return function(e) {
+    reader.onload = (function (theFile) {
+        return function (e) {
             // Render thumbnail.
             console.dir(e.target);
             sourceEditor.setValue(e.target.result);

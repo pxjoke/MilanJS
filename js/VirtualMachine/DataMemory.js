@@ -36,8 +36,8 @@ function DataMemory(maxAddress, errorHandler) {
 
     function getDump() {
         var buffer = '';
-        memory.forEach(function(item) {
-            buffer += item+'<br>';
+        memory.forEach(function (item) {
+            buffer += '<li class="list-group-item">' + item + '</li>';
         });
         return buffer;
     }

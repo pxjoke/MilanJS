@@ -9,9 +9,9 @@ function StackWorkspace(maxSize, errorHandler) {
     self.push = push;
     self.printStack = printStack;
     self.getDump = getDump;
-    
+
     function printStack() {
-        for(i in stack){
+        for (i in stack) {
             VMConsole.write(stack[i]);
         }
     }
@@ -27,7 +27,7 @@ function StackWorkspace(maxSize, errorHandler) {
     }
 
     function push(word) {
-        if (stack.length  < MAX_STACK_SIZE) {
+        if (stack.length < MAX_STACK_SIZE) {
             stack.push(parseInt(word));
         }
         else {
@@ -37,8 +37,8 @@ function StackWorkspace(maxSize, errorHandler) {
 
     function getDump() {
         var buffer = '';
-        stack.forEach(function(item) {
-            buffer += item+'<br>';
+        stack.forEach(function (item) {
+            buffer += '<li class="list-group-item">' + item + '</li>';
         });
         return buffer;
     }

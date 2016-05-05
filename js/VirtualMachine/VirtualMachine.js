@@ -23,8 +23,12 @@ function VirtualMachine() {
     self.getMemoryDump = getMemoryDump;
     self.getStackDump = getStackDump;
     self.resetProgramPointer = resetProgramPointer;
+    self.isWorking = getWorkingFlag;
 
-    
+    function getWorkingFlag() {
+        return isWorking;
+    }
+
     function getCommandsDump() {
         return programMemory.getDump();
     }
@@ -36,17 +40,17 @@ function VirtualMachine() {
     function getStackDump() {
         return stackWorkspace.getDump();
     }
-    
+
     function resetProgramPointer() {
         programPointer = 0;
     }
-    
+
     function compile(source) {
+        isWorking = true;
         scanner = new VMScanner(source);
         parser = new VMParser(scanner, programMemory);
         parser.parse();
     }
-
 
     function getProgramPointer() {
         return programPointer;
@@ -57,8 +61,8 @@ function VirtualMachine() {
         VMConsole.write("");
         dataMemory.printMemoryDump();
         VMConsole.write("");
-        VMConsole.write("------------------------------");        
-        
+        VMConsole.write("------------------------------");
+
     }
 
     function printProgramCommands() {

@@ -90,6 +90,9 @@
                         <button type="button" class="btn btn-default" id="nextCommandBtn"><span
                                 class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Command
                         </button>
+                        <button type="button" class="btn btn-default" id="continueBtn"><span
+                                class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Continue
+                        </button>
                     </div>
                     <div id="machineCodeEditor"></div>
                 </div>
@@ -100,8 +103,11 @@
                     <div class="panel panel-default ">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                Output
+                                <span class="glyphicon glyphicon-console"></span> Output
+                                <span class="glyphicon glyphicon-trash btn btn-danger btn-xs pull-right" id="clearOutputBtn">
+                                </span>
                             </h3>
+
                         </div>
                         <div class="panel-body">
                             <ul class="list-group" id="output">
@@ -121,11 +127,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Stack
+                            <span class="glyphicon glyphicon-menu-hamburger"></span> Stack
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <p id="stack"></p>
+                        <ul class="list-group" id="stack"></ul>
                     </div>
                 </div>
             </div>
@@ -133,11 +139,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Memory
+                            <span class="glyphicon glyphicon-list-alt"></span> Memory
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <p id="memory"></p>
+                        <ul class="list-group" id="memory"></ul>
                     </div>
                 </div>
             </div>
