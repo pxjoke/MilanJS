@@ -1,5 +1,16 @@
+var codeSample = "/* Code sample */\n" +
+    "begin\n" +
+    "   a := 100;\n" +
+    "   b := 35;\n" +
+    "   if a < b then\n" +
+    "       write(a)\n" +
+    "   else\n" +
+    "       write(b)\n" +
+    "   fi\n" +
+    "end\n";
 
-
+sourceEditor.setValue(codeSample);
+sourceEditor.gotoLine(0);
 var vm = null;
 
 $("#sourceCompileBtn").on('click', compile);
@@ -7,7 +18,7 @@ $("#sourceRunBtn").on('click', run);
 $("#sourceStepByStepBtn").on('click', stepByStep);
 $("#nextCommandBtn").on('click', step);
 
-function printVMConsoleToOutput(){
+function printVMConsoleToOutput() {
     $("#output").html(VMConsole.getBuffer());
 }
 
@@ -26,7 +37,7 @@ function print() {
 }
 
 
-function run(){
+function run() {
     vm.resetProgramPointer();
     vm.execute();
     print();
@@ -41,7 +52,7 @@ function stepByStep() {
 
 function step() {
     vm.executeCommand();
-    machineCodeEditor.gotoLine(vm.getProgramPointer()+1);
+    machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
     print();
 }
 
