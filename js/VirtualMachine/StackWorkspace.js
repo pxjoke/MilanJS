@@ -8,6 +8,7 @@ function StackWorkspace(maxSize, errorHandler) {
     self.pop = pop;
     self.push = push;
     self.printStack = printStack;
+    self.getDump = getDump;
     
     function printStack() {
         for(i in stack){
@@ -32,6 +33,14 @@ function StackWorkspace(maxSize, errorHandler) {
         else {
             errorHandler.error(RuntimeErrors.get().STACK_OVERFLOW);
         }
+    }
+
+    function getDump() {
+        var buffer = '';
+        stack.forEach(function(item) {
+            buffer += item+'<br>';
+        });
+        return buffer;
     }
 
 }

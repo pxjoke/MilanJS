@@ -7,6 +7,7 @@ function DataMemory(maxAddress, errorHandler) {
     self.load = load;
     self.store = store;
     self.printMemoryDump = printMemoryDump;
+    self.getDump = getDump;
 
     function load(address) {
         if (parseInt(address) < MAX_ADDRESS) {
@@ -31,5 +32,13 @@ function DataMemory(maxAddress, errorHandler) {
         for (i in memory) {
             VMConsole.write(memory[i]);
         }
+    }
+
+    function getDump() {
+        var buffer = '';
+        memory.forEach(function(item) {
+            buffer += item+'<br>';
+        });
+        return buffer;
     }
 }

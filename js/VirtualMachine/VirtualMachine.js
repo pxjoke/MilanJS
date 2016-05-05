@@ -20,10 +20,20 @@ function VirtualMachine() {
     self.printState = printState;
     self.getCommandsDump = getCommandsDump;
     self.executeCommand = executeCommand;
-    
+    self.getMemoryDump = getMemoryDump;
+    self.getStackDump = getStackDump;
+
     
     function getCommandsDump() {
         return programMemory.getDump();
+    }
+
+    function getMemoryDump() {
+        return dataMemory.getDump();
+    }
+
+    function getStackDump() {
+        return stackWorkspace.getDump();
     }
     
     function compile(source) {
