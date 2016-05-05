@@ -7,7 +7,7 @@ var scanner = new Scanner(' +  begin end');
 
 var command = new Command(Opcodes.get().LOAD, 15);
 
-var ce = new CodeEmitter('hello\n');
+// var ce = new CodeEmitter('hello\n');
 
 // ce.emit(Opcodes.get().PUSH, 25);
 // ce.emit(Opcodes.get().LOAD, 13);
@@ -52,9 +52,17 @@ scanner = new Scanner(undefined);
 //     console.log(scanner.value);
 // }
 //
-var parser = new Parser(scanner, '');
-console.log(parser.parse());
-console.dir(parser.getVarTable());
+// var parser = new Parser(scanner, '');
+// console.log(parser.parse());
+// console.dir(parser.getVarTable());
+
+function start() {
+    var code = document.getElementById('source').value;
+    scanner = new Scanner(code);
+    var parser = new Parser(scanner, '');
+    console.log(parser.parse());
+    console.dir(parser.getVarTable());
+}
 
 
 
