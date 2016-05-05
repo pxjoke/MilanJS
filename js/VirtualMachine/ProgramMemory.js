@@ -30,7 +30,7 @@ function ProgramMemory(maxSize, errorHandler) {
     function getDump() {
         var buffer = "";
         for (var i in commands) {
-            buffer += (commands[i].address + ": " + commands[i].opcode.name + " " + commands[i].argument + "\n");
+            buffer += (commands[i].address + ": " + commands[i].opcode.name + " " + (commands[i].opcode.needArgs ? commands[i].argument : '') + "\n");
         }
         return buffer;
     }

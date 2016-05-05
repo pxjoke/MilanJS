@@ -164,7 +164,7 @@ function Parser(scanner, out) {
         }
         else {
             error = true;
-            reportError("Expected identifier, number, READ, '(' or unary minus, but " + unit.value + " found.");
+            reportError("Expected identifier, number, READ, '(' or unary minus, but " + unit.token.name + " found.");
         }
     }
 
@@ -212,7 +212,7 @@ function Parser(scanner, out) {
     }
 
     function reportError(message) {
-        console.log(message);
+        VMConsole.error(message);
     };
 
 }
