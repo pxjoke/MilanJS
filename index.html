@@ -62,10 +62,28 @@
     </div>
     <div class="row">
         <div class="col-lg-5 editor-area">
-            <div id="editor">function foo(items) {
-     var x = "All this is syntax highlighted";
-     return x;
-}</div>
+            <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
+                <button type="button" class="btn btn-info"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Compile</button>
+                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> Run</button>
+                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step</button>
+            </div>
+
+            <div id="editor">/* Code Sample */
+begin
+    n := READ;
+    p := READ;
+
+    s := 1;
+
+    while p > 0 do
+    s := s * n;
+    p := p - 1
+    od;
+    if s < 10 then write(0) else write(s) fi;
+    write(s);
+end
+</div>
+
         </div>
         <div class="col-lg-4 machine-code-area">
             <div class="well">Compiled code</div>
@@ -91,8 +109,8 @@
 <script>
     var editor = ace.edit("editor");
     editor.getSession().setUseWorker(false);
-    editor.setTheme("ace/theme/github");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.setTheme("ace/theme/clouds");
+    editor.getSession().setMode("ace/mode/text");
 </script>
 </body>
 </html>
