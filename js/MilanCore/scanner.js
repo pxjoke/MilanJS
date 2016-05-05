@@ -1,24 +1,25 @@
 'use strict';
 function Scanner(program) {
+    program = program + '$';
     var self = this;
     var size = program.length;
     var i = 0;
     var ch = program[i];
-    self.token = {};
+    var unit;
+    
     self.arithval = {};
     self.intval = {};
     self.strval = {};
     self.errorState = false;
-    self.value = {};
 
     self.getI = function() {
         return i;
     }
 
-    self.nextToken = function () {
+    self.getNext = function () {
 
-        self.value = undefined;
-
+        // unit.value = undefined;
+        unit = new Unit();
         skipSpaces();
         if(ch === '/') {
             nextChar();
@@ -32,9 +33,9 @@ function Scanner(program) {
                 nextChar();
             }
             else {
-                self.token = Tokens.get().MULOP;
-                self.value = ArithmeticTypes.get().DIVIDE;
-                nextChar();
+                unit.token = Tokens.get().MULOP;
+                unit.value = ArithmeticTypes.get().DIVIDE;
+                return unit;
             }
         }
 
@@ -45,8 +46,8 @@ function Scanner(program) {
                 value = value * 10 + Number(ch);
                 nextChar();
             }
-            self.token = Tokens.get().NUMBER;
-            self.value = value;
+            unit.token = Tokens.get().NUMBER;
+            unit.value = value;
         }
         else if(isIdentifierStart(ch)) {
             var buffer = '';
@@ -57,61 +58,61 @@ function Scanner(program) {
 
             var identifier = buffer.toUpperCase();
             if(Tokens.isKeyword(identifier)) {
-                self.token = Tokens.get()[identifier];
+                unit.token = Tokens.get()[identifier];
             }
             else {
-                self.token = Tokens.get().IDENTIFIER;
-                self.value = identifier.toLocaleLowerCase();
+                unit.token = Tokens.get().IDENTIFIER;
+                unit.value = identifier.toLocaleLowerCase();
             }
         }
         else {
             switch (ch) {
                 case '(':
                     nextChar();
-                    self.token = Tokens.get().LPAREN;
+                    unit.token = Tokens.get().LPAREN;
                     break;
 
                 case ')':
                     nextChar();
-                    self.token = Tokens.get().RPAREN;
+                    unit.token = Tokens.get().RPAREN;
                     break;
 
                 case ';':
                     nextChar();
-                    self.token = Tokens.get().SEMICOLON;
+                    unit.token = Tokens.get().SEMICOLON;
                     break;
 
                 case ':':
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.token = Tokens.get().ASSIGN;
+                        unit.token = Tokens.get().ASSIGN;
                     } else {
                         reportError("':=' expected, but ':' found");
                         nextChar();
-                        self.token = Tokens.get().ILLEGAL;
+                        unit.token = Tokens.get().ILLEGAL;
                     }
                     break;
 
                 case '<':
-                    self.token = Tokens.get().CMP;
+                    unit.token = Tokens.get().CMP;
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.value = CompareTypes.get().LE;
+                        unit.value = CompareTypes.get().LE;
                     } else {
-                        self.value = CompareTypes.get().LT;
+                        unit.value = CompareTypes.get().LT;
                     }
                     break;
 
                 case '>':
-                    self.token = Tokens.get().CMP;
+                    unit.token = Tokens.get().CMP;
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.value = CompareTypes.get().GE;
+                        unit.value = CompareTypes.get().GE;
                     } else {
-                        self.value = CompareTypes.get().GT;
+                        unit.value = CompareTypes.get().GT;
                     }
                     break;
 
@@ -119,58 +120,58 @@ function Scanner(program) {
                     nextChar();
                     if (ch == '=') {
                         nextChar();
-                        self.token = Tokens.get().CMP;
-                        self.value = CompareTypes.get().NE;
+                        unit.token = Tokens.get().CMP;
+                        unit.value = CompareTypes.get().NE;
                     } else {
                         reportError("'!=' expected, but '!' found");
                         nextChar();
-                        self.token = Tokens.get().ILLEGAL;
+                        unit.token = Tokens.get().ILLEGAL;
                     }
                     break;
 
                 case '=':
                     nextChar();
-                    self.token = Tokens.get().CMP;
-                    self.value = CompareTypes.get().EQ;
+                    unit.token = Tokens.get().CMP;
+                    unit.value = CompareTypes.get().EQ;
                     break;
 
                 case '+':
                     nextChar();
-                    self.token = Tokens.get().ADDOP;
-                    self.value = ArithmeticTypes.get().PLUS;
+                    unit.token = Tokens.get().ADDOP;
+                    unit.value = ArithmeticTypes.get().PLUS;
                     break;
 
                 case '-':
                     nextChar();
-                    self.token = Tokens.get().ADDOP;
-                    self.value = ArithmeticTypes.get().MINUS;
+                    unit.token = Tokens.get().ADDOP;
+                    unit.value = ArithmeticTypes.get().MINUS;
                     break;
 
                 case '*':
                     nextChar();
-                    self.token = Tokens.get().MULOP;
-                    self.value = ArithmeticTypes.get().MULTIPLY;
+                    unit.token = Tokens.get().MULOP;
+                    unit.value = ArithmeticTypes.get().MULTIPLY;
                     break;
 
                 case '/':
                     nextChar();
-                    self.token = Tokens.get().MULOP;
-                    self.value = ArithmeticTypes.get().DIVIDE;
+                    unit.token = Tokens.get().MULOP;
+                    unit.value = ArithmeticTypes.get().DIVIDE;
                     break;
 
                 case '$':
-                    self.token = Tokens.get().EOF;
+                    unit.token = Tokens.get().EOF;
                     break;
 
                 default:
                     reportError("'%c': illegal character", ch);
                     nextChar();
-                    self.token = Tokens.get().ILLEGAL;
-            };
+                    unit.token = Tokens.get().ILLEGAL;
+            }
 
         }
-
-    }
+        return unit;
+    };
 
     function nextChar() {
         i++;
