@@ -3,15 +3,15 @@ var VMConsole = (function () {
 
 
     function write(msg) {
-        infoBuffer = infoBuffer + msg + "<br>";
+        infoBuffer = infoBuffer +'<li class="list-group-item">' + msg + '</li>';
     }
 
     function error(msg) {
-        infoBuffer = infoBuffer + msg + "<br>";
+        infoBuffer = infoBuffer + '<li class="list-group-item">' + msg + '</li>';
     }
 
     function warning(msg) {
-        infoBuffer = infoBuffer + msg + "<br>";
+        infoBuffer = infoBuffer + '<li class="list-group-item">' + msg + '</li>';
     }
 
     function getInt() {
