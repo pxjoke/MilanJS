@@ -82,6 +82,7 @@ function continueExecution() {
     }
     vm.execute();
     print();
+    machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
     $('#nextCommandBtn').addClass('disabled');
     $('#continueBtn').addClass('disabled');
 }
