@@ -7,7 +7,7 @@ var VMConsole = (function () {
     }
 
     function error(msg) {
-        infoBuffer = infoBuffer + '<li class="list-group-item">' + msg + '</li>';
+        infoBuffer = infoBuffer + '<li class="list-group-item list-group-item-danger">' + msg + '</li>';
     }
 
     function warning(msg) {

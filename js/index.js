@@ -17,6 +17,10 @@ $("#sourceCompileBtn").on('click', compile);
 $("#sourceRunBtn").on('click', run);
 $("#sourceStepByStepBtn").on('click', stepByStep);
 $("#nextCommandBtn").on('click', step);
+$('#file').change(fileUpload);
+$('#file').bootstrapFileInput();
+$('#nextCommandBtn').addClass('disabled');
+
 
 function printVMConsoleToOutput() {
     $("#output").html(VMConsole.getBuffer());
@@ -38,19 +42,20 @@ function print() {
 
 
 function run() {
-    vm.resetProgramPointer();
+    compile();
     vm.execute();
     print();
 }
 
 function stepByStep() {
-    vm.resetProgramPointer();
-    // machineCodeEditor.find(vm.getProgramPointer()+':');
+    compile();
     machineCodeEditor.gotoLine(1);
+    $('#nextCommandBtn').removeClass('disabled');
 
 }
 
 function step() {
+    
     vm.executeCommand();
     machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
     print();
@@ -66,6 +71,7 @@ function compile() {
     vm = new VirtualMachine();
     vm.compile(compiledSource);
     machineCodeEditor.setValue(vm.getCommandsDump());
+    machineCodeEditor.gotoLine(0);
 
     printVMConsoleToOutput();
 
@@ -73,8 +79,8 @@ function compile() {
 }
 
 function fileUpload(evt) {
-    var files = evt.target.files;
-    var f = files[0];
+    var files = evt.target.files[0];
+    var f = files;
     console.dir(f);
     var reader = new FileReader();
     reader.onload = (function(theFile) {
@@ -82,9 +88,9 @@ function fileUpload(evt) {
             // Render thumbnail.
             console.dir(e.target);
             sourceEditor.setValue(e.target.result);
+            sourceEditor.gotoLine(0);
         };
     })(f);
     reader.readAsText(f);
 }
 
-document.getElementById('files').addEventListener('change', fileUpload, false);

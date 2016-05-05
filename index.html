@@ -80,6 +80,7 @@
                         <button type="button" class="btn btn-default" id="sourceStepByStepBtn"><span
                                 class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step
                         </button>
+                        <input class="pull-right" type="file" id = "file" name = files[] >
                     </div>
                     <div id="sourceEditor"></div>
                 </div>
@@ -138,7 +139,6 @@
                     <div class="panel-body">
                         <p id="memory"></p>
                     </div>
-                    <input type="file" id = "files" name = files[] multiple>
                 </div>
             </div>
         </div>
@@ -156,6 +156,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/milan_highlight_rules.js"></script>
 <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var sourceEditor = ace.edit("sourceEditor");
@@ -193,7 +194,8 @@
 <script type="text/javascript" src="js/VirtualMachine/ProgramMemory.js"></script>
 <script type="text/javascript" src="js/VirtualMachine/StackWorkspace.js"></script>
 <script type="text/javascript" src="js/VirtualMachine/VirtualMachine.js"></script>
+<script type="text/javascript" src="js/bootstrap.file-input.js"></script>
+
 <script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" src="js/milan_highlight_rules.js"></script>
 </body>
 </html>
