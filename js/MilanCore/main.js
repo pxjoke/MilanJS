@@ -33,15 +33,18 @@ var ce = new CodeEmitter('hello\n');
 
 
 
-scanner = new Scanner("/* Greatest common divisor */" +
-    "BEGIN\n " +
-    "a := READ;" +
-    "b := READ;" +
-    "b := b - 3*(6-a)/241; " +
-    "a := a - b; " +
-    "a := -----4; " +
-    "END " +
-    "$");
+// scanner = new Scanner("/* Greatest common divisor */" +
+//     "BEGIN\n " +
+//     "a := READ;" +
+//     "b := READ;" +
+//     "b := b - 3*(6-a)/241; " +
+//     "a := a - b; " +
+//     "a := -----4; " +
+//     "END " +
+//     "$");
+
+scanner = new Scanner(undefined);
+
 
 // while (scanner.token !== Tokens.get().EOF) {
 //     scanner.nextToken();

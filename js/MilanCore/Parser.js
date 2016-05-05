@@ -7,13 +7,14 @@ function Parser(scanner, out) {
     var nextVarAddr = 0;
     var isRecovered = true;
     var error = false;
-    scanner.nextToken();
+    var unit = scanner.getNext();
 
     self.parse = function () {
-        program();
+        if (!see(Tokens.get().EOF))
+            program();
         mustBe(Tokens.get().EOF);
-        // if (!error)
-        out = emitter.flush();
+        if (!error)
+            out = emitter.flush();
         return out;
     };
 
@@ -43,11 +44,46 @@ function Parser(scanner, out) {
 
     function statement() {
         if (see(Tokens.get().IDENTIFIER)) {
-            var varAddr = getVarAddr(scanner.value);
-            scanner.nextToken();
+            var varAddr = getVarAddr(unit.value);
+            unit = scanner.getNext();
             mustBe(Tokens.get().ASSIGN);
             expression();
             emitter.emit(Opcodes.get().STORE, varAddr);
+        }
+        else if (match(Tokens.get().IF)) {
+            relationalExpression();
+            var jumpNo = emitter.makeHole();
+            mustBe(Tokens.get().THEN);
+            statementList();
+            if (match(Tokens.get().ELSE)) {
+                var jump = emitter.makeHole();
+                emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
+                statementList();
+                emitter.emitAt(jump, Opcodes.get().JUMP, emitter.getCurrentAddress());
+            }
+            else {
+                emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
+            }
+            mustBe(Tokens.get().FI);
+        }
+        else if (match(Tokens.get().WHILE)) {
+            var cond = emitter.getCurrentAddress();
+            relationalExpression();
+            var jumpNo = emitter.makeHole();
+            mustBe(Tokens.get().DO);
+            statementList();
+            mustBe(Tokens.get().OD);
+            emitter.emit(Opcodes.get().JUMP, cond);
+            emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
+        }
+        else if (match(Tokens.get().WRITE)) {
+            mustBe(Tokens.get().LPAREN);
+            expression();
+            mustBe(Tokens.get().RPAREN);
+            emitter.emit(Opcodes.get().PRINT);
+        }
+        else {
+            reportError(unit.token.name + ' found while STATEMENT is expected!')
         }
     }
 
@@ -56,8 +92,8 @@ function Parser(scanner, out) {
         term();
         while (more) {
             if (see(Tokens.get().ADDOP)) {
-                var op = scanner.value;
-                scanner.nextToken();
+                var op = unit.value;
+                unit = scanner.getNext();
                 term();
                 if (op === ArithmeticTypes.get().PLUS)
                     emitter.emit(Opcodes.get().ADD);
@@ -70,13 +106,27 @@ function Parser(scanner, out) {
         }
     }
 
+    function relationalExpression() {
+        expression();
+        if (see(Tokens.get().CMP)) {
+            var op = unit.value;
+            unit = scanner.getNext();
+            expression();
+            emitter.emit(Opcodes.get().COMPARE, op.code);
+        }
+        else {
+            error = true;
+            reportError("Relational operator required, but " + unit.token.name + " found.");
+        }
+    }
+
     function term() {
         var more = true;
         factor();
         while (more) {
             if (see(Tokens.get().MULOP)) {
-                var op = scanner.value;
-                scanner.nextToken();
+                var op = unit.value;
+                unit = scanner.getNext();
                 factor();
                 if (op === ArithmeticTypes.get().MULTIPLY)
                     emitter.emit(Opcodes.get().MULT);
@@ -92,29 +142,29 @@ function Parser(scanner, out) {
 
     function factor() {
         if (see(Tokens.get().IDENTIFIER)) {
-            emitter.emit(Opcodes.get().LOAD, getVarAddr(scanner.value));
-            scanner.nextToken();
+            emitter.emit(Opcodes.get().LOAD, getVarAddr(unit.value));
+            unit = scanner.getNext();
         }
         else if (see(Tokens.get().NUMBER)) {
-            emitter.emit(Opcodes.get().PUSH, scanner.value);
-            scanner.nextToken();
+            emitter.emit(Opcodes.get().PUSH, unit.value);
+            unit = scanner.getNext();
         }
         else if (see(Tokens.get().READ)) {
             emitter.emit(Opcodes.get().INPUT);
-            scanner.nextToken();
+            unit = scanner.getNext();
         }
         else if (match(Tokens.get().LPAREN)) {
             expression();
             mustBe(Tokens.get().RPAREN);
         }
-        else if (see(Tokens.get().ADDOP) && scanner.value == ArithmeticTypes.get().MINUS) {
-            scanner.nextToken();
+        else if (see(Tokens.get().ADDOP) && unit.value == ArithmeticTypes.get().MINUS) {
+            unit = scanner.getNext();
             factor();
             emitter.emit(Opcodes.get().INVERT);
         }
         else {
             error = true;
-            reportError("Expected identifier, number, READ, '(' or unary minus, but " + scanner.value + " found.");
+            reportError("Expected identifier, number, READ, '(' or unary minus, but " + unit.value + " found.");
         }
     }
 
@@ -127,20 +177,20 @@ function Parser(scanner, out) {
     }
 
     function see(token) {
-        return scanner.token === token;
+        return unit.token === token;
     }
 
     function match(token) {
         if (see(token)) {
-            scanner.nextToken();
+            unit = scanner.getNext();
             return true;
         }
         return false;
     }
 
     function mustBe(token) {
-        if (scanner.token === token) {
-            scanner.nextToken();
+        if (see(token)) {
+            unit = scanner.getNext();
             isRecovered = true;
         }
         else {
@@ -148,13 +198,13 @@ function Parser(scanner, out) {
             if (isRecovered) {
                 isRecovered = false;
                 error = true;
-                reportError(scanner.token.name + ' is found while ' + token.name + ' is expected!');
+                reportError(unit.token.name + ' is found while ' + token.name + ' is expected!');
             }
             else {
-                while (scanner.token !== token && scanner.token !== Tokens.get().EOF)
-                    scanner.nextToken();
-                if (scanner.token === token) {
-                    scanner.nextToken();
+                while (unit.token !== token && unit.token !== Tokens.get().EOF)
+                    unit = scanner.getNext();
+                if (see(token)) {
+                    unit = scanner.getNext();
                     isRecovered = true;
                 }
             }
