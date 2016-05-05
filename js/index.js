@@ -71,3 +71,20 @@ function compile() {
 
 
 }
+
+function fileUpload(evt) {
+    var files = evt.target.files;
+    var f = files[0];
+    console.dir(f);
+    var reader = new FileReader();
+    reader.onload = (function(theFile) {
+        return function(e) {
+            // Render thumbnail.
+            console.dir(e.target);
+            sourceEditor.setValue(e.target.result);
+        };
+    })(f);
+    reader.readAsText(f);
+}
+
+document.getElementById('files').addEventListener('change', fileUpload, false);
