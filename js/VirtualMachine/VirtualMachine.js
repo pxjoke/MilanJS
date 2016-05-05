@@ -22,6 +22,7 @@ function VirtualMachine() {
     self.executeCommand = executeCommand;
     self.getMemoryDump = getMemoryDump;
     self.getStackDump = getStackDump;
+    self.resetProgramPointer = resetProgramPointer;
 
     
     function getCommandsDump() {
@@ -34,6 +35,10 @@ function VirtualMachine() {
 
     function getStackDump() {
         return stackWorkspace.getDump();
+    }
+    
+    function resetProgramPointer() {
+        programPointer = 0;
     }
     
     function compile(source) {

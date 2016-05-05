@@ -27,16 +27,21 @@ function print() {
 
 
 function run(){
+    vm.resetProgramPointer();
     vm.execute();
     print();
 }
 
 function stepByStep() {
-    step();
+    vm.resetProgramPointer();
+    // machineCodeEditor.find(vm.getProgramPointer()+':');
+    machineCodeEditor.gotoLine(1);
+
 }
 
 function step() {
     vm.executeCommand();
+    machineCodeEditor.gotoLine(vm.getProgramPointer()+1);
     print();
 }
 
