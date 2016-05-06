@@ -41,7 +41,7 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="#about">About</a></li>
-                <li><a href="#">VM Commands</a></li>
+                <li><a href="/vm-commands.html">VM Commands</a></li>
                 <li><a href="#contact">Language Reference</a></li>
             </ul>
         </div><!--/.nav-collapse -->
@@ -51,93 +51,9 @@
 <!-- Begin page content -->
 <div class="container">
     <div class="page-header">
-        <h1>MiLan in action</h1>
+        <h1>Virtual Machine Commands</h1>
     </div>
     <div class="row">
-        <div class="col-lg-9">
-            <div class="row">
-                <div class="col-lg-6  editor-area">
-                    <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
-                        <button type="button" class="btn btn-info" id="sourceCompileBtn"><span
-                                class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Compile
-                        </button>
-                        <button type="button" class="btn btn-success" id="sourceRunBtn"><span
-                                class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> Run
-                        </button>
-                        <button type="button" class="btn btn-default" id="sourceStepByStepBtn"><span
-                                class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span> Step by Step
-                        </button>
-                        <input class="pull-right" type="file" id="file" name=files[]>
-                    </div>
-                    <div id="sourceEditor"></div>
-                </div>
-
-                <div class="col-lg-6  machine-code-area">
-                    <div class="btn-group-xs editor-toolbar" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default" id="nextCommandBtn"><span
-                                class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Command
-                        </button>
-                        <button type="button" class="btn btn-default" id="continueBtn"><span
-                                class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Continue
-                        </button>
-                    </div>
-                    <div id="machineCodeEditor"></div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="output-area">
-                    <div class="panel panel-default ">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="glyphicon glyphicon-console"></span> Output
-                                <span class="glyphicon glyphicon-trash btn btn-danger btn-xs pull-right"
-                                      id="clearOutputBtn">
-                                </span>
-                            </h3>
-
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group" id="output">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="col-lg-3 ">
-            <div class="state-area">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="glyphicon glyphicon-menu-hamburger"></span> Stack
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group" id="stack"></ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="glyphicon glyphicon-list-alt"></span> Memory
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group" id="memory"></ul>
-                        </div>
-                    </div>
-                    <div id="download"></div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

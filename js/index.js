@@ -21,6 +21,18 @@ $("#nextCommandBtn").on('click', step);
 $("#download").on('mouseenter', function () {
     setDownloadLink();
 });
+$("#continueBtn").on('click', continueExecution);
+$("#clearOutputBtn").on('click', clearOutput);
+$('#file').change(fileUpload);
+$('#file').bootstrapFileInput();
+$('#nextCommandBtn').addClass('disabled');
+$('#continueBtn').addClass('disabled');
+
+
+function clearOutput() {
+    VMConsole.clear();
+    printVMConsoleToOutput();
+}
 
 function printVMConsoleToOutput() {
     $("#output").html(VMConsole.getBuffer());
@@ -42,22 +54,41 @@ function print() {
 
 
 function run() {
-    vm.resetProgramPointer();
+    compile();
     vm.execute();
     print();
 }
 
 function stepByStep() {
-    vm.resetProgramPointer();
-    // machineCodeEditor.find(vm.getProgramPointer()+':');
+    compile();
     machineCodeEditor.gotoLine(1);
+    $('#nextCommandBtn').removeClass('disabled');
+    $('#continueBtn').removeClass('disabled');
 
 }
 
 function step() {
+    if (!vm.isWorking()) {
+        $('#nextCommandBtn').addClass('disabled');
+        $('#continueBtn').addClass('disabled');
+        return;
+    }
     vm.executeCommand();
     machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
     print();
+}
+
+function continueExecution() {
+    if (!vm.isWorking()) {
+        $('#nextCommandBtn').addClass('disabled');
+        $('#continueBtn').addClass('disabled');
+        return;
+    }
+    vm.execute();
+    print();
+    machineCodeEditor.gotoLine(vm.getProgramPointer() + 1);
+    $('#nextCommandBtn').addClass('disabled');
+    $('#continueBtn').addClass('disabled');
 }
 
 function compile() {
@@ -70,24 +101,24 @@ function compile() {
     vm = new VirtualMachine();
     vm.compile(compiledSource);
     machineCodeEditor.setValue(vm.getCommandsDump());
+    machineCodeEditor.gotoLine(0);
 
     printVMConsoleToOutput();
-    setDownloadLink();
 
 
 }
 
 function fileUpload(evt) {
-    var files = evt.target.files;
-    var f = files[0];
+    var files = evt.target.files[0];
+    var f = files;
     console.dir(f);
     var reader = new FileReader();
-    reader.onload = (function(theFile) {
-        return function(e) {
+    reader.onload = (function (theFile) {
+        return function (e) {
             // Render thumbnail.
             console.dir(e.target);
             sourceEditor.setValue(e.target.result);
-            setDownloadLink();
+            sourceEditor.gotoLine(0);
         };
     })(f);
     reader.readAsText(f);
@@ -100,4 +131,5 @@ function setDownloadLink() {
         '<a id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(sourceEditor.getValue()) + '" download="program.mil">download</a>'
     );
 }
+
 
