@@ -5,6 +5,7 @@ function Scanner(program) {
     var size = program.length;
     var i = 0;
     var ch = program[i];
+    var lineCounter = 1;
     var unit;
     
     self.arithval = {};
@@ -18,7 +19,6 @@ function Scanner(program) {
 
     self.getNext = function () {
 
-        // unit.value = undefined;
         unit = new Unit();
         skipSpaces();
         if(ch === '/') {
@@ -88,7 +88,7 @@ function Scanner(program) {
                         nextChar();
                         unit.token = Tokens.get().ASSIGN;
                     } else {
-                        reportError("':=' expected, but ':' found");
+                        reportError("Error at line "+lineCounter+": ':=' expected, but ':' found");
                         nextChar();
                         unit.token = Tokens.get().ILLEGAL;
                     }
@@ -123,7 +123,7 @@ function Scanner(program) {
                         unit.token = Tokens.get().CMP;
                         unit.value = CompareTypes.get().NE;
                     } else {
-                        reportError("'!=' expected, but '!' found");
+                        reportError("Error at line "+lineCounter+":'!=' expected, but '!' found");
                         nextChar();
                         unit.token = Tokens.get().ILLEGAL;
                     }
@@ -164,18 +164,20 @@ function Scanner(program) {
                     break;
 
                 default:
-                    reportError("'%c': illegal character", ch);
+                    reportError("Error at line "+lineCounter+": illegal character: "+ch);
                     nextChar();
                     unit.token = Tokens.get().ILLEGAL;
             }
 
         }
+        unit.line = lineCounter;
         return unit;
     };
 
     function nextChar() {
         i++;
         ch = program[i];
+        if(ch === '\n') lineCounter++;
     }
 
     function skipSpaces() {

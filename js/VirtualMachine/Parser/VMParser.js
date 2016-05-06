@@ -81,24 +81,6 @@ function VMParser(scanner, programMemory) {
         return errorHandler.isAnyError();
     }
 
-    function see(token) {
-        return scanner.token === token;
-    }
 
-    function match(token) {
-        if (see(token)) {
-            scanner.nextToken();
-            return true;
-        }
-        return false;
-    }
-
-    function mustBe(token) {
-        if (scanner.token === token) {
-            scanner.nextToken();
-        }
-        else {
-            isWorking = false;
-        }
-    }
+    
 }

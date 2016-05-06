@@ -10,11 +10,11 @@ function VMParserErrorHandler() {
     self.warnings = [];
 
     function isAnyError() {
-        return self.errors.length !== 0;
+        return self.errors.length > 0;
     }
 
     function isAnyWarnings() {
-        return self.warnings.length !== 0;
+        return self.warnings.length > 0;
     }
 
     function warning(vmParserError, instead) {

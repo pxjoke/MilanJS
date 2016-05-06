@@ -9,6 +9,10 @@ function Parser(scanner, out) {
     var error = false;
     var unit = scanner.getNext();
 
+    self.isAnyError = function() {
+        return error;
+    }
+
     self.parse = function () {
         if (!see(Tokens.get().EOF))
             program();
@@ -87,7 +91,7 @@ function Parser(scanner, out) {
             emitter.emit(Opcodes.get().PRINT);
         }
         else {
-            reportError(unit.token.name + ' found while STATEMENT is expected!')
+            reportError("Error at line "+unit.line+": " + unit.token.name + ' found while STATEMENT is expected!')
         }
     }
 
@@ -97,13 +101,14 @@ function Parser(scanner, out) {
         while (more) {
             if (see(Tokens.get().ADDOP)) {
                 var op = unit.value;
+                var line = unit.line;
                 unit = scanner.getNext();
                 term();
                 if (op === ArithmeticTypes.get().PLUS)
                     emitter.emit(Opcodes.get().ADD);
                 else if (op === ArithmeticTypes.get().MINUS)
                     emitter.emit(Opcodes.get().SUB);
-                else reportError('Unexpected ' + op.name + ' found while PLUS or MINUS are expected!')
+                else reportError("Error at line "+line+": "+'Unexpected ' + op.name + ' found while PLUS or MINUS are expected!')
             }
             else
                 more = false;
@@ -120,7 +125,7 @@ function Parser(scanner, out) {
         }
         else {
             error = true;
-            reportError("Relational operator required, but " + unit.token.name + " found.");
+            reportError("Error at line "+unit.line+": "+"Relational operator required, but " + unit.token.name + " found.");
         }
     }
 
@@ -130,6 +135,7 @@ function Parser(scanner, out) {
         while (more) {
             if (see(Tokens.get().MULOP)) {
                 var op = unit.value;
+                var line = unit.line;
                 unit = scanner.getNext();
                 factor();
                 if (op === ArithmeticTypes.get().MULTIPLY)
@@ -137,7 +143,7 @@ function Parser(scanner, out) {
                 else if (op === ArithmeticTypes.get().DIVIDE)
                     emitter.emit(Opcodes.get().DIV);
                 else
-                    reportError('Unexpected ' + op.name + ' found while MULTIPLY or DIVIDE are expected!')
+                    reportError("Error at line "+line+": "+'Unexpected ' + op.name + ' found while MULTIPLY or DIVIDE are expected!')
             }
             else
                 more = false;
@@ -168,7 +174,7 @@ function Parser(scanner, out) {
         }
         else {
             error = true;
-            reportError("Expected identifier, number, READ, '(' or unary minus, but " + unit.token.name + " found.");
+            reportError("Error at line "+unit.line+": "+"Expected identifier, number, READ, '(' or unary minus, but " + unit.token.name + " found.");
         }
     }
 
@@ -202,7 +208,7 @@ function Parser(scanner, out) {
             if (isRecovered) {
                 isRecovered = false;
                 error = true;
-                reportError(unit.token.name + ' is found while ' + token.name + ' is expected!');
+                reportError('Error at line '+ unit.line+ ': ' + unit.token.name + ' is found while ' + token.name + ' is expected!');
             }
             else {
                 while (unit.token !== token && unit.token !== Tokens.get().EOF)
@@ -216,6 +222,7 @@ function Parser(scanner, out) {
     }
 
     function reportError(message) {
+        if (scanner.errorState) return;
         VMConsole.error(message);
     };
 

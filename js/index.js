@@ -100,17 +100,18 @@ function compile() {
     var sourceScanner = new Scanner(sourceCode);
     var sourceParser = new Parser(sourceScanner, '');
     var compiledSource = sourceParser.parse();
-    varTable = sourceParser.getVarTable();
-    console.dir(varTable);
-    vm = new VirtualMachine();
-    vm.compile(compiledSource);
-    printMemory();
-    machineCodeEditor.setValue(vm.getCommandsDump());
-    machineCodeEditor.gotoLine(0);
-    setCompiledCodeDownloadLink();
+    if(!sourceParser.isAnyError()) {
+        varTable = sourceParser.getVarTable();
+        vm = new VirtualMachine();
+        vm.compile(compiledSource);
+        printMemory();
+        machineCodeEditor.setValue(vm.getCommandsDump());
+        machineCodeEditor.gotoLine(0);
+        setCompiledCodeDownloadLink();
 
+        $('#downloadCompiled').removeClass('disabled');
+    }
     printVMConsoleToOutput();
-    $('#downloadCompiled').removeClass('disabled');
 
 
 

@@ -39,6 +39,7 @@ function DataMemory(maxAddress, errorHandler) {
         varTable.forEach(function (item, i) {
             buffer += '<li class="list-group-item"><span class="label label-default">0x' + i + '</span> ' +'<span class="label label-info">'+ item + '  := ' + (memory[i] ? memory[i] : '') + '</span></li>';
         });
+        if (buffer.length === 0) buffer = '<p class="small text-muted text-center">Empty</p>';
         return buffer;
     }
 }
