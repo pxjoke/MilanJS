@@ -8,6 +8,7 @@ function Parser(scanner, out) {
     var isRecovered = true;
     var error = false;
     var unit = scanner.getNext();
+    var oldUnit;
 
     self.isAnyError = function() {
         return error;
@@ -50,13 +51,18 @@ function Parser(scanner, out) {
         }
     }
 
+    function assign() {
+        var varAddr = getVarAddr(unit.value);
+        unit = scanner.getNext();
+        mustBe(Tokens.get().ASSIGN);
+        expression();
+        emitter.emit(Opcodes.get().STORE, varAddr);
+        return varAddr;
+    }
+
     function statement() {
         if (see(Tokens.get().IDENTIFIER)) {
-            var varAddr = getVarAddr(unit.value);
-            unit = scanner.getNext();
-            mustBe(Tokens.get().ASSIGN);
-            expression();
-            emitter.emit(Opcodes.get().STORE, varAddr);
+            assign();
         }
         else if (match(Tokens.get().IF)) {
             relationalExpression();
@@ -81,6 +87,25 @@ function Parser(scanner, out) {
             mustBe(Tokens.get().DO);
             statementList();
             mustBe(Tokens.get().OD);
+            emitter.emit(Opcodes.get().JUMP, cond);
+            emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
+        }
+        else if (match(Tokens.get().FOR)) {
+            mustBe(Tokens.get().IDENTIFIER, true);
+            var loopVariableAddress = assign();
+            mustBe(Tokens.get().THREEDOT);
+            var cond = emitter.getCurrentAddress();
+            emitter.emit(Opcodes.get().LOAD, loopVariableAddress);
+            expression();
+            emitter.emit(Opcodes.get().COMPARE, CompareTypes.get().LE.code);
+            var jumpNo = emitter.makeHole();
+            mustBe(Tokens.get().DO);
+            statementList();
+            mustBe(Tokens.get().OD);
+            emitter.emit(Opcodes.get().LOAD, loopVariableAddress);
+            emitter.emit(Opcodes.get().PUSH, 1);
+            emitter.emit(Opcodes.get().ADD);
+            emitter.emit(Opcodes.get().STORE, loopVariableAddress);
             emitter.emit(Opcodes.get().JUMP, cond);
             emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
         }
@@ -198,9 +223,10 @@ function Parser(scanner, out) {
         return false;
     }
 
-    function mustBe(token) {
+    function mustBe(token, noNext) {
         if (see(token)) {
-            unit = scanner.getNext();
+            if (!noNext)
+                unit = scanner.getNext();
             isRecovered = true;
         }
         else {
@@ -214,7 +240,8 @@ function Parser(scanner, out) {
                 while (unit.token !== token && unit.token !== Tokens.get().EOF)
                     unit = scanner.getNext();
                 if (see(token)) {
-                    unit = scanner.getNext();
+                    if (!noNext)
+                        unit = scanner.getNext();
                     isRecovered = true;
                 }
             }
