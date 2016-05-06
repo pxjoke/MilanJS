@@ -19,7 +19,11 @@ function Parser(scanner, out) {
     };
 
     self.getVarTable = function () {
-        return variables;
+        var varTable = [];
+        for(var key in variables) {
+            varTable[variables[key]] = key;
+        }
+        return varTable;
     }
 
     function program() {

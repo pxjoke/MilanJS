@@ -34,10 +34,10 @@ function DataMemory(maxAddress, errorHandler) {
         }
     }
 
-    function getDump() {
+    function getDump(varTable) {
         var buffer = '';
-        memory.forEach(function (item) {
-            buffer += '<li class="list-group-item">' + item + '</li>';
+        varTable.forEach(function (item, i) {
+            buffer += '<li class="list-group-item"><span class="label label-default">0x' + i + '</span> ' +'<span class="label label-info">'+ item + '  := ' + (memory[i] ? memory[i] : '') + '</span></li>';
         });
         return buffer;
     }

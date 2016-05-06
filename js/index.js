@@ -13,6 +13,7 @@ sourceEditor.setValue(codeSample);
 setDownloadLink();
 sourceEditor.gotoLine(0);
 var vm = null;
+var varTable;
 
 $("#sourceCompileBtn").on('click', compile);
 $("#sourceRunBtn").on('click', run);
@@ -43,7 +44,7 @@ function printStack() {
 }
 
 function printMemory() {
-    $("#memory").html(vm.getMemoryDump());
+    $("#memory").html(vm.getMemoryDump(varTable));
 }
 
 function print() {
@@ -96,10 +97,11 @@ function compile() {
     var sourceScanner = new Scanner(sourceCode);
     var sourceParser = new Parser(sourceScanner, '');
     var compiledSource = sourceParser.parse();
-    var varTable = sourceParser.getVarTable();
-
+    varTable = sourceParser.getVarTable();
+    console.dir(varTable);
     vm = new VirtualMachine();
     vm.compile(compiledSource);
+    printMemory();
     machineCodeEditor.setValue(vm.getCommandsDump());
     machineCodeEditor.gotoLine(0);
 
@@ -123,8 +125,6 @@ function fileUpload(evt) {
     })(f);
     reader.readAsText(f);
 }
-
-document.getElementById('files').addEventListener('change', fileUpload, false);
 
 function setDownloadLink() {
     $("#download").html(

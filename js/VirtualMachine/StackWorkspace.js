@@ -38,7 +38,7 @@ function StackWorkspace(maxSize, errorHandler) {
     function getDump() {
         var buffer = '';
         stack.forEach(function (item) {
-            buffer += '<li class="list-group-item">' + item + '</li>';
+            buffer += '<li class="list-group-item"><span class="label label-danger">' + item + '</span></li>';
         });
         return buffer;
     }

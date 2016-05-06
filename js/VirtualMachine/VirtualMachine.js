@@ -33,8 +33,8 @@ function VirtualMachine() {
         return programMemory.getDump();
     }
 
-    function getMemoryDump() {
-        return dataMemory.getDump();
+    function getMemoryDump(varTable) {
+        return dataMemory.getDump(varTable);
     }
 
     function getStackDump() {
