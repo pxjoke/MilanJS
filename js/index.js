@@ -11,6 +11,7 @@ var codeSample = "/* Code sample */\n" +
 
 sourceEditor.setValue(codeSample);
 setDownloadLink();
+setCompiledCodeDownloadLink();
 sourceEditor.gotoLine(0);
 var vm = null;
 var varTable;
@@ -21,6 +22,7 @@ $("#sourceStepByStepBtn").on('click', stepByStep);
 $("#nextCommandBtn").on('click', step);
 $("#download").on('mouseenter', function () {
     setDownloadLink();
+
 });
 $("#continueBtn").on('click', continueExecution);
 $("#clearOutputBtn").on('click', clearOutput);
@@ -28,6 +30,7 @@ $('#file').change(fileUpload);
 $('#file').bootstrapFileInput();
 $('#nextCommandBtn').addClass('disabled');
 $('#continueBtn').addClass('disabled');
+$('#downloadCompiled').addClass('disabled');
 
 
 function clearOutput() {
@@ -104,8 +107,11 @@ function compile() {
     printMemory();
     machineCodeEditor.setValue(vm.getCommandsDump());
     machineCodeEditor.gotoLine(0);
+    setCompiledCodeDownloadLink();
 
     printVMConsoleToOutput();
+    $('#downloadCompiled').removeClass('disabled');
+
 
 
 }
@@ -129,6 +135,14 @@ function fileUpload(evt) {
 function setDownloadLink() {
     $("#download").html(
         '<a class="" id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(sourceEditor.getValue()) + '" download="program.mil">' +
+        '<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>'+
+        '</a>'
+    );
+}
+
+function setCompiledCodeDownloadLink() {
+    $("#downloadCompiled").html(
+        '<a class="" id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(machineCodeEditor.getValue()) + '" download="program.ms">' +
         '<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>'+
         '</a>'
     );
