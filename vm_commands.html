@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        #sourceEditor {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+
+        #machineCodeEditor {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">MiLanJS</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#about">About</a></li>
+                <li><a href="vm_commands.html">VM Commands</a></li>
+                <li><a href="#contact">Language Reference</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<!-- Begin page content -->
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Virtual Machine Commands</h1>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="doc-article">
+                    <p class="lead">
+                        Виртуальная машина Милана состоит из памяти команд, памяти данных и стека. Команды виртуальной
+                        машины
+                        считывают свои аргументы из стека и помещают в стек результаты.
+                    </p>
+                    <h2>Описание команд:</h2>
+
+                    <h4>
+                        <span class="label label-default">
+                            NOP
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Отсутствие операции; команда пропускается.
+                    </div>
+
+                    <h4>
+                        <span class="label label-default">
+                            STOP
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Прекращает выполнение программы.
+                    </div>
+
+                    <h4>
+                        <span class="label label-default">
+                            LOAD [адрес]
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Помещает в стек слово, расположенное в памяти по адресу [адрес].
+                    </div>
+
+                    <h4>
+                        <span class="label label-default">
+                            STORE [адрес]
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Выталкивает из стека слово и записывает его в память по адресу [адрес].
+                    </div>
+
+                    <h4>
+                        <span class="label label-default">
+                            BLOAD [адрес]
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Помещает в стек слово, адрес которого вычисляется следующим образом:
+                        [адрес в памяти] = [адрес] + [значение с вершины стека]. Значение
+                        с вершины стека удаляется.
+                    </div>
+
+                    <h4>
+                        <span class="label label-default">
+                            BSTORE [адрес]
+                        </span>
+                    </h4>
+
+                    <div class="well well-sm">
+                        Вычисляет адрес в памяти по формуле: [адрес в памяти] = [адрес] + [значение с вершины стека],
+                        значение
+                        с вершины стека при этом удаляется. Выталкивает из стека слово и записывает
+                        его по адресу [адрес в памяти].
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div id="machineCodeEditor"></div>
+        </div>
+
+
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">Place sticky footer content here.</p>
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"
+        integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+<script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var machineCodeEditor = ace.edit("machineCodeEditor");
+    machineCodeEditor.getSession().setUseWorker(false);
+    machineCodeEditor.setTheme("ace/theme/monokai");
+    machineCodeEditor.getSession().setMode("ace/mode/text");
+    machineCodeEditor.setReadOnly(true);  // false to make it editable
+    machineCodeEditor.setFontSize(14);
+    var sampleCode =
+            "\n;Sample code\n\n" +
+            "0: PUSH 100\n" +
+            "1: STORE 0\n" +
+            "2: PUSH 35\n" +
+            "3: STORE 1\n" +
+            "4: LOAD 0\n" +
+            "5: LOAD 1\n" +
+            "6: COMPARE 2\n" +
+            "7: JUMP_NO 11\n" +
+            "8: LOAD 0\n" +
+            "9: PRINT\n" +
+            "10: JUMP 13\n" +
+            "11: LOAD 1\n" +
+            "12: PRINT\n" +
+            "13: STOP\n";
+    machineCodeEditor.setValue(sampleCode);
+    machineCodeEditor.gotoLine(0);
+
+</script>
+</body>
+</html>
