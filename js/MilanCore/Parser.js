@@ -8,10 +8,14 @@ function Parser(scanner, out) {
     var isRecovered = true;
     var error = false;
     var unit = scanner.getNext();
+    var cycleIdStack = [];
+    var breakHoles = [];
+    var continueHoles = [];
+    var lastCycleId = 0;
 
-    self.isAnyError = function() {
+    self.isAnyError = function () {
         return error;
-    }
+    };
 
     self.parse = function () {
         if (!see(Tokens.get().EOF))
@@ -24,11 +28,11 @@ function Parser(scanner, out) {
 
     self.getVarTable = function () {
         var varTable = [];
-        for(var key in variables) {
+        for (var key in variables) {
             varTable[variables[key]] = key;
         }
         return varTable;
-    }
+    };
 
     function program() {
         mustBe(Tokens.get().BEGIN);
@@ -75,14 +79,32 @@ function Parser(scanner, out) {
             mustBe(Tokens.get().FI);
         }
         else if (match(Tokens.get().WHILE)) {
+            cycleIdStack.push(lastCycleId);
+            lastCycleId++;
             var cond = emitter.getCurrentAddress();
             relationalExpression();
             var jumpNo = emitter.makeHole();
             mustBe(Tokens.get().DO);
             statementList();
             mustBe(Tokens.get().OD);
+            var currentCycleId = cycleIdStack.pop();
+
             emitter.emit(Opcodes.get().JUMP, cond);
-            emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, emitter.getCurrentAddress());
+
+            var endOfCycle = emitter.getCurrentAddress();
+            emitter.emitAt(jumpNo, Opcodes.get().JUMP_NO, endOfCycle);
+
+            if (breakHoles[currentCycleId]) {
+                breakHoles[currentCycleId].forEach(function (item) {
+                    emitter.emitAt(item, Opcodes.get().JUMP, endOfCycle);
+                });
+            }
+
+            if (continueHoles[currentCycleId]) {
+                continueHoles[currentCycleId].forEach(function (item) {
+                    emitter.emitAt(item, Opcodes.get().JUMP, cond);
+                });
+            }
         }
         else if (match(Tokens.get().WRITE)) {
             mustBe(Tokens.get().LPAREN);
@@ -90,8 +112,20 @@ function Parser(scanner, out) {
             mustBe(Tokens.get().RPAREN);
             emitter.emit(Opcodes.get().PRINT);
         }
+        else if (match(Tokens.get().BREAK)) {
+            if (cycleIdStack.length === 0) return;
+            var currentCycle = cycleIdStack[cycleIdStack.length - 1];
+            if(!breakHoles[currentCycle]) breakHoles[currentCycle] = [];
+            breakHoles[currentCycle].push(emitter.makeHole());
+        }
+        else if (match(Tokens.get().CONTINUE)) {
+            if (cycleIdStack.length === 0) return;
+            var currentCycle = cycleIdStack[cycleIdStack.length - 1];
+            if(!continueHoles[currentCycle]) continueHoles[currentCycle] = [];
+            continueHoles[currentCycle].push(emitter.makeHole());
+        }
         else {
-            reportError("Error at line "+unit.line+": " + unit.token.name + ' found while STATEMENT is expected!')
+            reportError("Error at line " + unit.line + ": " + unit.token.name + ' found while STATEMENT is expected!')
         }
     }
 
@@ -108,7 +142,7 @@ function Parser(scanner, out) {
                     emitter.emit(Opcodes.get().ADD);
                 else if (op === ArithmeticTypes.get().MINUS)
                     emitter.emit(Opcodes.get().SUB);
-                else reportError("Error at line "+line+": "+'Unexpected ' + op.name + ' found while PLUS or MINUS are expected!')
+                else reportError("Error at line " + line + ": " + 'Unexpected ' + op.name + ' found while PLUS or MINUS are expected!')
             }
             else
                 more = false;
@@ -125,7 +159,7 @@ function Parser(scanner, out) {
         }
         else {
             error = true;
-            reportError("Error at line "+unit.line+": "+"Relational operator required, but " + unit.token.name + " found.");
+            reportError("Error at line " + unit.line + ": " + "Relational operator required, but " + unit.token.name + " found.");
         }
     }
 
@@ -143,7 +177,7 @@ function Parser(scanner, out) {
                 else if (op === ArithmeticTypes.get().DIVIDE)
                     emitter.emit(Opcodes.get().DIV);
                 else
-                    reportError("Error at line "+line+": "+'Unexpected ' + op.name + ' found while MULTIPLY or DIVIDE are expected!')
+                    reportError("Error at line " + line + ": " + 'Unexpected ' + op.name + ' found while MULTIPLY or DIVIDE are expected!')
             }
             else
                 more = false;
@@ -174,7 +208,7 @@ function Parser(scanner, out) {
         }
         else {
             error = true;
-            reportError("Error at line "+unit.line+": "+"Expected identifier, number, READ, '(' or unary minus, but " + unit.token.name + " found.");
+            reportError("Error at line " + unit.line + ": " + "Expected identifier, number, READ, '(' or unary minus, but " + unit.token.name + " found.");
         }
     }
 
@@ -208,7 +242,7 @@ function Parser(scanner, out) {
             if (isRecovered) {
                 isRecovered = false;
                 error = true;
-                reportError('Error at line '+ unit.line+ ': ' + unit.token.name + ' is found while ' + token.name + ' is expected!');
+                reportError('Error at line ' + unit.line + ': ' + unit.token.name + ' is found while ' + token.name + ' is expected!');
             }
             else {
                 while (unit.token !== token && unit.token !== Tokens.get().EOF)
@@ -224,6 +258,6 @@ function Parser(scanner, out) {
     function reportError(message) {
         if (scanner.errorState) return;
         VMConsole.error(message);
-    };
+    }
 
 }
