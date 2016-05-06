@@ -14,3 +14,10 @@
 .state-area{
     margin-top:30px;
 }
+#downloadLink{
+    color: #000;
+}
+
+#download{
+    margin-right:5px;
+}

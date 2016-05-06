@@ -124,11 +124,11 @@ function fileUpload(evt) {
     reader.readAsText(f);
 }
 
-document.getElementById('files').addEventListener('change', fileUpload, false);
-
 function setDownloadLink() {
     $("#download").html(
-        '<a id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(sourceEditor.getValue()) + '" download="program.mil">download</a>'
+        '<a class="" id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(sourceEditor.getValue()) + '" download="program.mil">' +
+        '<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>'+
+        '</a>'
     );
 }
 
