@@ -25,6 +25,8 @@ var Tokens = (function () {
         OD         : new Token('OD',         true),  // Ключевое слово "od"
         WRITE      : new Token('WRITE',      true),  // Ключевое слово "write"
         READ       : new Token('READ',       true),  // Ключевое слово "read"
+        CONTINUE   : new Token('CONTINUE',   true), // Закрывающая скобка
+        BREAK      : new Token('BREAK',      true), // Закрывающая скобка
         ASSIGN     : new Token('ASSIGN',     false), // Оператор ":="
         ADDOP      : new Token('ADDOP',      false), // Сводная лексема для "+" и "-"
         MULOP      : new Token('MULOP',      false), // Сводная лексема для "*" и "/"
