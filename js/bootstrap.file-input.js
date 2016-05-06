@@ -24,7 +24,7 @@ $.fn.bootstrapFileInput = function() {
     }
 
     // Set the word to be displayed on the button
-    var buttonWord = 'Browse';
+    var buttonWord = '';
 
     if (typeof $elem.attr('title') != 'undefined') {
       buttonWord = $elem.attr('title');
@@ -83,35 +83,35 @@ $.fn.bootstrapFileInput = function() {
       });
     });
 
-    $('body').on('change', '.file-input-wrapper input[type=file]', function(){
-
-      var fileName;
-      fileName = $(this).val();
-
-      // Remove any previous file names
-      $(this).parent().next('.file-input-name').remove();
-      if (!!$(this).prop('files') && $(this).prop('files').length > 1) {
-        fileName = $(this)[0].files.length+' files';
-      }
-      else {
-        fileName = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length);
-      }
-
-      // Don't try to show the name if there is none
-      if (!fileName) {
-        return;
-      }
-
-      var selectedFileNamePlacement = $(this).data('filename-placement');
-      if (selectedFileNamePlacement === 'inside') {
-        // Print the fileName inside
-        $(this).siblings('span').html(fileName);
-        $(this).attr('title', fileName);
-      } else {
-        // Print the fileName aside (right after the the button)
-        $(this).parent().after('<span class="file-input-name">'+fileName+'</span>');
-      }
-    });
+    // $('body').on('change', '.file-input-wrapper input[type=file]', function(){
+    //
+    //   var fileName;
+    //   fileName = $(this).val();
+    //
+    //   // Remove any previous file names
+    //   $(this).parent().next('.file-input-name').remove();
+    //   if (!!$(this).prop('files') && $(this).prop('files').length > 1) {
+    //     fileName = $(this)[0].files.length+' files';
+    //   }
+    //   else {
+    //     fileName = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length);
+    //   }
+    //
+    //   // Don't try to show the name if there is none
+    //   if (!fileName) {
+    //     return;
+    //   }
+    //
+    //   var selectedFileNamePlacement = $(this).data('filename-placement');
+    //   if (selectedFileNamePlacement === 'inside') {
+    //     // Print the fileName inside
+    //     $(this).siblings('span').html(fileName);
+    //     $(this).attr('title', fileName);
+    //   } else {
+    //     // Print the fileName aside (right after the the button)
+    //     $(this).parent().after('<span class="file-input-name">'+fileName+'</span>');
+    //   }
+    // });
 
   });
 
