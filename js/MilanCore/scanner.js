@@ -94,6 +94,24 @@ function Scanner(program) {
                     }
                     break;
 
+                case '.':
+                    nextChar();
+                    if (ch == '.') {
+                        nextChar();
+                        if (ch == '.') {
+                            unit.token = Tokens.get().THREEDOT;
+                        }
+                        else {
+                            reportError("Error at line "+lineCounter+": '...' expected, but '..' found");
+                            unit.token = Tokens.get().ILLEGAL;
+                        }
+                    } else {
+                        reportError("Error at line "+lineCounter+": '...' expected, but '.' found");
+                        unit.token = Tokens.get().ILLEGAL;
+                    }
+                    nextChar();
+                    break;
+
                 case '<':
                     unit.token = Tokens.get().CMP;
                     nextChar();

@@ -25,7 +25,9 @@ var Tokens = (function () {
         OD         : new Token('OD',         true),  // Ключевое слово "od"
         WRITE      : new Token('WRITE',      true),  // Ключевое слово "write"
         READ       : new Token('READ',       true),  // Ключевое слово "read"
+        FOR        : new Token('FOR',        true),  // Ключевое слово "for"
         ASSIGN     : new Token('ASSIGN',     false), // Оператор ":="
+        THREEDOT   : new Token('THREEDOT',   false), // Оператор "..."
         ADDOP      : new Token('ADDOP',      false), // Сводная лексема для "+" и "-"
         MULOP      : new Token('MULOP',      false), // Сводная лексема для "*" и "/"
         CMP        : new Token('CMP',        false), // Сводная лексема для операторов отношения
