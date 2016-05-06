@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main Page</title>
+    <title>Milan Description</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -52,7 +52,7 @@
 <div class="container">
     <div class="row">
         <div class="page-header">
-            <h1>Virtual Machine Commands</h1>
+            <h1>MiLan Language Reference</h1>
         </div>
 
         <div class="col-lg-8">
@@ -131,13 +131,12 @@
                     </div>
 
 
-
                 </div>
             </div>
         </div>
 
         <div class="col-lg-4">
-            <div id="machineCodeEditor"></div>
+            <div id="sourceEditor"></div>
         </div>
 
 
@@ -153,30 +152,25 @@
         integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    var machineCodeEditor = ace.edit("machineCodeEditor");
-    machineCodeEditor.getSession().setUseWorker(false);
-    machineCodeEditor.setTheme("ace/theme/monokai");
-    machineCodeEditor.getSession().setMode("ace/mode/text");
-    machineCodeEditor.setReadOnly(true);  // false to make it editable
-    machineCodeEditor.setFontSize(14);
-    var sampleCode =
-            "\n;Sample code\n\n" +
-            "0: PUSH 100\n" +
-            "1: STORE 0\n" +
-            "2: PUSH 35\n" +
-            "3: STORE 1\n" +
-            "4: LOAD 0\n" +
-            "5: LOAD 1\n" +
-            "6: COMPARE 2\n" +
-            "7: JUMP_NO 11\n" +
-            "8: LOAD 0\n" +
-            "9: PRINT\n" +
-            "10: JUMP 13\n" +
-            "11: LOAD 1\n" +
-            "12: PRINT\n" +
-            "13: STOP\n";
-    machineCodeEditor.setValue(sampleCode);
-    machineCodeEditor.gotoLine(0);
+    var sourceEditor = ace.edit("sourceEditor");
+    sourceEditor.getSession().setUseWorker(false);
+    sourceEditor.setTheme("ace/theme/clouds");
+    sourceEditor.getSession().setMode("ace/mode/pascal");
+    sourceEditor.setReadOnly(true);  // false to make it editable
+    sourceEditor.setFontSize(14);
+    var codeSample =
+            "/* Code sample */\n" +
+            "begin\n" +
+            "   a := 100;\n" +
+            "   b := 35;\n" +
+            "   if a < b then\n" +
+            "       write(a)\n" +
+            "   else\n" +
+            "       write(b)\n" +
+            "   fi\n" +
+            "end\n";
+    sourceEditor.setValue(codeSample);
+    sourceEditor.gotoLine(0);
 
 </script>
 </body>
