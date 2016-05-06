@@ -10,6 +10,7 @@ var codeSample = "/* Code sample */\n" +
     "end\n";
 
 sourceEditor.setValue(codeSample);
+setDownloadLink();
 sourceEditor.gotoLine(0);
 var vm = null;
 
@@ -17,6 +18,9 @@ $("#sourceCompileBtn").on('click', compile);
 $("#sourceRunBtn").on('click', run);
 $("#sourceStepByStepBtn").on('click', stepByStep);
 $("#nextCommandBtn").on('click', step);
+$("#download").on('mouseenter', function () {
+    setDownloadLink();
+});
 $("#continueBtn").on('click', continueExecution);
 $("#clearOutputBtn").on('click', clearOutput);
 $('#file').change(fileUpload);
@@ -119,4 +123,13 @@ function fileUpload(evt) {
     })(f);
     reader.readAsText(f);
 }
+
+document.getElementById('files').addEventListener('change', fileUpload, false);
+
+function setDownloadLink() {
+    $("#download").html(
+        '<a id="downloadLink" href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(sourceEditor.getValue()) + '" download="program.mil">download</a>'
+    );
+}
+
 
