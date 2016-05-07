@@ -1,20 +1,20 @@
-define("ace/mode/milan_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+define("ace/mode/vm_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-var MilanHighlightRules = function() {
+var VMHighlightRules = function() {
 
     this.$rules = { start: 
        [ { caseInsensitive: true,
            token: 'keyword',
-           regex: '\\b(?:(begin|end|do|od|if|else|then|fi|for|then|while|write|read))\\b' },
+           regex: '\\b(?:(nop|stop|load|store|bload|bstore|push|pop|dup|add|mult|sub|div|invert|compare|jump|jump_yes|jump_no|input|print))\\b' },
          { caseInsensitive: true,           
            token: 'variable',
-           regex: '\\b[a-zA-Z][a-zA-Z\\d]*\\b' },
+           regex: '\\b(function|procedure)(\\s+)(\\w+)(\\.\\w+)?(?=(?:\\(.*?\\))?;\\s*(?:attribute|forward|external))' },
          { token: 'constant.numeric',
-           regex: '\\b((\\+|-)?[0-9]+)\\b' },
+           regex: '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)\\b' },
          { token: 'punctuation.definition.comment',
            regex: '\\/\\*',
            push: 
@@ -28,9 +28,9 @@ var MilanHighlightRules = function() {
     this.normalizeRules();
 };
 
-oop.inherits(MilanHighlightRules, TextHighlightRules);
+oop.inherits(VMHighlightRules, TextHighlightRules);
 
-exports.MilanHighlightRules = MilanHighlightRules;
+exports.VMHighlightRules = VMHighlightRules;
 });
 
 define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module) {
@@ -120,16 +120,16 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-define("ace/mode/milan",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/milan_highlight_rules","ace/mode/folding/coffee"], function(require, exports, module) {
+define("ace/mode/vm",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/vm_highlight_rules","ace/mode/folding/coffee"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var MilanHighlightRules = require("./milan_highlight_rules").MilanHighlightRules;
+var VMHighlightRules = require("./vm_highlight_rules").VMHighlightRules;
 var FoldMode = require("./folding/coffee").FoldMode;
 
 var Mode = function() {
-    this.HighlightRules = MilanHighlightRules;
+    this.HighlightRules = VMHighlightRules;
     this.foldingRules = new FoldMode();
 };
 oop.inherits(Mode, TextMode);
@@ -141,7 +141,7 @@ oop.inherits(Mode, TextMode);
         {start: "/*", end: "*/"}
     ];
     
-    this.$id = "ace/mode/milan";
+    this.$id = "ace/mode/vm";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
