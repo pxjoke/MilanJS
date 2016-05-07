@@ -156,13 +156,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
-<script type="text/javascript" src="js/milan_highlight_rules.js"></script>
-<script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<!--<script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>-->
+
+<script type="text/javascript" src="js/editor/src/ace.js"></script>
+<!--<script type="text/javascript" src="js/milan.js"></script>-->
+<!--<script type="text/javascript" src="js/milan_highlight_rules.js"></script>-->
 <script>
     var sourceEditor = ace.edit("sourceEditor");
     sourceEditor.getSession().setUseWorker(false);
     sourceEditor.setTheme("ace/theme/clouds");
-    sourceEditor.getSession().setMode("ace/mode/pascal");
+    sourceEditor.getSession().setMode("ace/mode/milan");
 
     var machineCodeEditor = ace.edit("machineCodeEditor");
     machineCodeEditor.getSession().setUseWorker(false);
