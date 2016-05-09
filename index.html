@@ -167,11 +167,12 @@
     sourceEditor.getSession().setUseWorker(false);
     sourceEditor.setTheme("ace/theme/clouds");
     sourceEditor.getSession().setMode("ace/mode/milan");
+    sourceEditor.setFontSize(14);
 
     var machineCodeEditor = ace.edit("machineCodeEditor");
     machineCodeEditor.getSession().setUseWorker(false);
-    machineCodeEditor.setTheme("ace/theme/iplastic");
-    machineCodeEditor.getSession().setMode("ace/mode/text");
+    machineCodeEditor.setTheme("ace/theme/katzenmilch");
+    machineCodeEditor.getSession().setMode("ace/mode/vm");
     machineCodeEditor.setReadOnly(true);  // false to make it editable
     machineCodeEditor.setFontSize(14);
 </script>

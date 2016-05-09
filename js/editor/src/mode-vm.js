@@ -10,20 +10,10 @@ var VMHighlightRules = function() {
        [ { caseInsensitive: true,
            token: 'keyword',
            regex: '\\b(?:(nop|stop|load|store|bload|bstore|push|pop|dup|add|mult|sub|div|invert|compare|jump|jump_yes|jump_no|input|print))\\b' },
-         { caseInsensitive: true,           
-           token: 'variable',
-           regex: '\\b(function|procedure)(\\s+)(\\w+)(\\.\\w+)?(?=(?:\\(.*?\\))?;\\s*(?:attribute|forward|external))' },
-         { token: 'constant.numeric',
-           regex: '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)\\b' },
-         { token: 'punctuation.definition.comment',
-           regex: '\\/\\*',
-           push: 
-            [ { token: 'punctuation.definition.comment',
-                regex: '\\*\\/',
-                next: 'pop' },
-              { defaultToken: 'comment.block' } ] },
-          { token: 'keyword.operator',
-           regex: '[+\\-;,/*]|:=|=' } ] };
+         // { token: 'constant.numeric',
+         //   regex: '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)\\b' },
+          { token: 'support.function',
+           regex: '\\d+:' } ] };
     
     this.normalizeRules();
 };
