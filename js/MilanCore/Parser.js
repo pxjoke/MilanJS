@@ -106,12 +106,6 @@ function Parser(scanner, out) {
                 });
             }
         }
-        else if (match(Tokens.get().WRITE)) {
-            mustBe(Tokens.get().LPAREN);
-            expression();
-            mustBe(Tokens.get().RPAREN);
-            emitter.emit(Opcodes.get().PRINT);
-        }
         else if (match(Tokens.get().BREAK)) {
             if (cycleIdStack.length === 0) return;
             var currentCycle = cycleIdStack[cycleIdStack.length - 1];
@@ -123,6 +117,12 @@ function Parser(scanner, out) {
             var currentCycle = cycleIdStack[cycleIdStack.length - 1];
             if(!continueHoles[currentCycle]) continueHoles[currentCycle] = [];
             continueHoles[currentCycle].push(emitter.makeHole());
+        }
+        else if (match(Tokens.get().WRITE)) {
+            mustBe(Tokens.get().LPAREN);
+            expression();
+            mustBe(Tokens.get().RPAREN);
+            emitter.emit(Opcodes.get().PRINT);
         }
         else {
             reportError("Error at line " + unit.line + ": " + unit.token.name + ' found while STATEMENT is expected!')

@@ -9,7 +9,7 @@ var MilanHighlightRules = function() {
     this.$rules = { start: 
        [ { caseInsensitive: true,
            token: 'keyword',
-           regex: '\\b(?:(begin|end|do|od|if|else|then|fi|for|then|while))\\b' },
+           regex: '\\b(?:(begin|end|do|od|if|else|then|fi|for|then|while|break|continue))\\b' },
          { caseInsensitive: true,           
            token: 'variable',
            regex: '\\b[a-zA-Z][a-zA-Z\\d]*\\b' },
